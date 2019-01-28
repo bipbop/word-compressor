@@ -1,5 +1,5 @@
-#ifndef word_compressor_dictionary_register
-#define word_compressor_dictionary_register 1
+#ifndef word_compressor_dictionary_generator_register
+#define word_compressor_dictionary_generator_register 1
 
 #include "./types.h"
 

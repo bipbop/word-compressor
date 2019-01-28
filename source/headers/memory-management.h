@@ -17,6 +17,11 @@
 #define app_realloc realloc
 #endif
 
+#ifndef MEMORY_TABLE_LENGTH
+#define MEMORY_TABLE_LENGTH 3000
+#endif
+
+void get_memory_table();
 void *word_compressor_malloc(unsigned long);
 void *word_compressor_realloc(void **, unsigned long *, unsigned long);
 void word_compressor_free(void **, unsigned long);

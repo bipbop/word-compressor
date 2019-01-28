@@ -5,6 +5,7 @@
 
 #include "./headers/codes.h"
 #include "./headers/dictionary-binary-tree.h"
+#include "./headers/dictionary-generator.h"
 #include "./headers/dictionary.h"
 #include "./headers/file.h"
 #include "./headers/memory-management.h"
@@ -15,10 +16,12 @@ long dictionary(char *text, unsigned long start, unsigned long end,
                 void **callback_parameters, short alphanum, short *error) {
   DictionaryNode **mainNode = (DictionaryNode **)callback_parameters;
   unsigned short is_new = 0;
-  char *word = word_compressor_pinch_string(text, start, end);
+  char *word = NULL;
 
   if (!alphanum)
     return 0;
+
+  word = word_compressor_pinch_string(text, start, end);
 
   if (word == NULL) {
     *error =

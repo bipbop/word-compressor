@@ -3,6 +3,7 @@
 
 #include "./headers/codes.h"
 #include "./headers/create-index.h"
+#include "./headers/dictionary-binary-tree.h"
 #include "./headers/dictionary-compare.h"
 #include "./headers/dictionary-iterator.h"
 #include "./headers/memory-management.h"
@@ -30,12 +31,13 @@ short int copy_list(DictionaryNode **node, void *parameter, short *error) {
   return WORD_COMPRESSOR_SUCCESS;
 }
 
-short word_compressor_create_index(DictionaryNode *current_node,
+short word_compressor_create_index(DictionaryNode **current_node,
                                    unsigned long tree_size) {
   DictionaryArray dictionary_array = {
       .list = NULL, .size = tree_size, .position = 0};
 
   DictionaryNode *position = NULL;
+  DictionaryNode *new_list = NULL;
   short response = 0;
   short error = 0;
   unsigned long index_size = 0;
@@ -55,7 +57,7 @@ short word_compressor_create_index(DictionaryNode *current_node,
 
   bzero(dictionary_array.list, ordered_list_size);
 
-  response = word_compressor_dictionary_iterator(&current_node, &copy_list,
+  response = word_compressor_dictionary_iterator(current_node, &copy_list,
                                                  &dictionary_array, &error);
   if (response < 0) {
     word_compressor_free((void **)dictionary_array.list, ordered_list_size);
@@ -81,11 +83,16 @@ short word_compressor_create_index(DictionaryNode *current_node,
       return word_compressor_error(WORD_COMPRESSOR_ERROR_EMPTY_POSITION, NULL);
     }
 
+    position->parent = NULL;
+    position->left = NULL;
+    position->right = NULL;
+
     if (position->index != NULL && position->index != position->value) {
       word_compressor_free_string(&position->index);
     }
 
-    index_size = word_compressor_position_index(NULL, 0, dictionary_array.position);
+    index_size =
+        word_compressor_position_index(NULL, 0, dictionary_array.position);
 
     position->index = (char *)word_compressor_malloc(index_size * sizeof(char));
     if (position->index == NULL) {
@@ -106,13 +113,18 @@ short word_compressor_create_index(DictionaryNode *current_node,
     index_size -= word_compressor_position_index(position->index, index_size,
                                                  dictionary_array.position);
     if (index_size) {
+      word_compressor_free((void **)&dictionary_array.list, ordered_list_size);
       return word_compressor_error(WORD_COMPRESSOR_ERROR_CORRUPTION,
                                    "the program did not write as many bytes as "
                                    "needed, remaining %ld for %ld position",
                                    index_size, dictionary_array.position);
     }
+
+    word_compressor_dictionary_binary_tree_push(position, &new_list, new_list);
+    new_list = word_compressor_dictionary_binary_tree_base(new_list);
   }
 
+  *current_node = new_list;
   word_compressor_free((void **)&dictionary_array.list, ordered_list_size);
   return WORD_COMPRESSOR_SUCCESS;
 }

@@ -31,10 +31,7 @@ char *default_error_message(short code) {
 
 time_t word_compressor_last_error_time() { return last_error_at; }
 
-short word_compressor_last_error_code() {
-  return last_error;
-}
-
+short word_compressor_last_error_code() { return last_error; }
 
 char *word_compressor_last_error() {
   if (last_error_message == '\0') {

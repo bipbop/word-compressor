@@ -48,11 +48,11 @@ unsigned int word_compressor_file(FILE *fp, Callback callback,
                                       callback_parameters, error);
       word_compressor_free((void **)&fullstring, current_size);
       if (*error != WORD_COMPRESSOR_SUCCESS) {
-          return words;
+        return words;
       }
       current_size = 0;
       numbytes = 0;
-    } 
+    }
 
     bzero(buffer, sizeof(buffer));
   }

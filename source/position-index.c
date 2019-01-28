@@ -18,8 +18,9 @@ void reverse_string(char *str) {
 }
 
 #define word_compressor_has_input res_length != 0 && res != NULL
-#define has_index if (res_length < index)  return WORD_COMPRESSOR_ERROR_SIZE
-
+#define has_index                                                              \
+  if (res_length < index)                                                      \
+  return WORD_COMPRESSOR_ERROR_SIZE
 
 short word_compressor_position_index(char *res, unsigned long res_length,
                                      unsigned long position) {

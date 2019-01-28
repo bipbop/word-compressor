@@ -3,6 +3,6 @@
 
 #include "./types.h"
 
-short int word_compressor_create_index(DictionaryNode *, unsigned long);
+short int word_compressor_create_index(DictionaryNode **, unsigned long);
 
 #endif

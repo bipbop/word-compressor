@@ -22,6 +22,8 @@ DictionaryNode *word_compressor_dictionary(char *word, DictionaryNode *parent,
 void word_compressor_dictionary_free(DictionaryNode **node,
                                      unsigned short int free_word,
                                      unsigned short int free_children) {
+  if (*node == NULL)
+    return;
   if (free_word && (*node)->value != NULL) {
     if ((*node)->value == (*node)->index) {
       word_compressor_free_string(&(*node)->value);

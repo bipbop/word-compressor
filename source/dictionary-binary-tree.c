@@ -78,8 +78,8 @@ void word_compressor_dictionary_binary_tree_delete(
   int res = 0;
 
   DictionaryNode *node = *leaf;
-  DictionaryNode *left = node->right;
-  DictionaryNode *right = node->left;
+  DictionaryNode *left = node->left;
+  DictionaryNode *right = node->right;
   DictionaryNode *parent = node->parent;
 
   *leaf = NULL;

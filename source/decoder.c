@@ -52,8 +52,9 @@ long word_compressor_utf8iterate(char *str, unsigned long size,
                        (utf8proc_int32_t *)&codepoint_ref);
   if (n < 0) {
     last_decoder_error = n;
-    return word_compressor_error(WORD_COMPRESSOR_ERROR_ENCODE,
-                                 "we got an invalid UTF-8 string during iterating process");
+    return word_compressor_error(
+        WORD_COMPRESSOR_ERROR_ENCODE,
+        "we got an invalid UTF-8 string during iterating process");
   }
   return n;
 }
