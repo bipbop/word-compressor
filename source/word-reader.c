@@ -14,11 +14,11 @@ typedef struct ReadWordsStruct {
   unsigned long total_size;
   unsigned long begin_size;
   unsigned long size;
-  Callback callback;
+  WordCompressionCallbackReader callback;
 } WordReaderInstance;
 
-void iterate_text_reader(WordReaderInstance *this, short *error) {
-  short alphanum = word_compressor_utf8alnum(this->ptr_text);
+void iterate_text_reader(WordReaderInstance *this, short *error, short force) {
+  short alphanum = word_compression_utf8alnum(this->ptr_text);
   unsigned end_size;
 
   if (alphanum < 0) {
@@ -26,24 +26,27 @@ void iterate_text_reader(WordReaderInstance *this, short *error) {
     return;
   }
 
-  if (alphanum == this->alphanum) {
-    return;
+  if (!force) {
+    if (alphanum == this->alphanum) {
+      return;
+    }
+    this->alphanum = alphanum;
   }
 
   end_size = this->total_size - this->size;
-  this->alphanum = alphanum;
 
-  if (end_size != this->begin_size)
+  if (end_size != this->begin_size) {
     this->words +=
         this->callback(this->text, this->begin_size, end_size,
                        this->callback_parameters, !this->alphanum, error);
+  }
 
   this->begin_size = end_size;
 }
 
-unsigned long word_compressor_reader(char *text, unsigned long total_size,
-                                     Callback callback,
-                                     void *callback_parameters, short *error) {
+unsigned long word_compression_reader(char *text, unsigned long total_size,
+                                      WordCompressionCallbackReader callback,
+                                      void *callback_parameters, short *error) {
   WordReaderInstance this = {.text = text,
                              .total_size = total_size,
                              .callback = callback,
@@ -57,28 +60,25 @@ unsigned long word_compressor_reader(char *text, unsigned long total_size,
   unsigned long n = 0;
   int data = 0;
 
-  *error = WORD_COMPRESSOR_SUCCESS;
+  *error = WORD_COMPRESSION_SUCCESS;
 
   if (text == NULL)
     return 0;
 
-  while ((n = word_compressor_utf8iterate(this.ptr_text, this.size, &data)) !=
+  while ((n = word_compression_utf8iterate(this.ptr_text, this.size, &data)) !=
              0 &&
-         *error == WORD_COMPRESSOR_SUCCESS) {
-    if (n < 0) {
-      *error = n;
-      break;
-    }
+         *error == WORD_COMPRESSION_SUCCESS) {
 
     if (*this.ptr_text == '\0')
       break;
-    iterate_text_reader(&this, error);
+    iterate_text_reader(&this, error, 0);
     this.size -= n;
     this.ptr_text += n;
   }
 
-  if (*error == WORD_COMPRESSOR_SUCCESS) {
-    iterate_text_reader(&this, error);
+  if (*error == WORD_COMPRESSION_SUCCESS) {
+    this.alphanum = !this.alphanum;
+    iterate_text_reader(&this, error, 1);
   }
 
   return this.words;

@@ -1,5 +1,5 @@
-#ifndef WORD_COMPRESSOR_MEMORY_MANAGEMENT_REGISTER
-#define WORD_COMPRESSOR_MEMORY_MANAGEMENT_REGISTER 1
+#ifndef WORD_COMPRESSION_MEMORY_MANAGEMENT_REGISTER
+#define WORD_COMPRESSION_MEMORY_MANAGEMENT_REGISTER 1
 
 /* Use your malloc and free functions */
 
@@ -22,10 +22,10 @@
 #endif
 
 void get_memory_table();
-void *word_compressor_malloc(unsigned long);
-void *word_compressor_realloc(void **, unsigned long *, unsigned long);
-void word_compressor_free(void **, unsigned long);
-void word_compressor_free_string(char **);
-unsigned long word_compressor_allocated();
+void *word_compression_malloc(unsigned long);
+void *word_compression_realloc(void **, unsigned long *, unsigned long);
+void word_compression_free(void **, unsigned long);
+void word_compression_free_string(char **);
+unsigned long word_compression_allocated();
 
 #endif

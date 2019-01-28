@@ -1,44 +1,144 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 
-#include "./headers/callbacks.h"
-#include "./headers/codes.h"
-#include "./headers/create-index.h"
-#include "./headers/dictionary-generator.h"
-#include "./headers/dictionary-iterator.h"
-#include "./headers/dictionary.h"
-#include "./headers/filter.h"
-#include "./headers/memory-management.h"
-#include "./headers/types.h"
+#include "./headers/word-compression.h"
 
-#define default_filter 3
+FILE *fp = NULL;
 
-short print_format(DictionaryNode **node, void *arguments, short *error) {
-  printf("%s\t%s\t%ld\n", (*node)->value, (*node)->index, (*node)->occurrences);
-  return 0;
+char file_path_buffer[FILENAME_MAX + 1] = {0};
+char extension_buffer[FILENAME_MAX + 1] = {0};
+
+const char *file_extension(const char *path) {
+  if (path == NULL)
+    return NULL;
+  int length_path = strlen(path);
+  if (length_path > 4 &&
+      strcmp(path + (length_path - 4), WORD_COMPRESSION_EXTENSION) == 0)
+    return path;
+  snprintf(extension_buffer, FILENAME_MAX * sizeof(char), "%s%s", path,
+           WORD_COMPRESSION_EXTENSION);
+  if (realpath(extension_buffer, file_path_buffer) == NULL)
+    return extension_buffer;
+  return file_path_buffer;
 }
 
-int main(int argc, char **argv) {
-  DictionaryNode *current_node = NULL;
-  short error = WORD_COMPRESSOR_SUCCESS;
-  unsigned int filter_ocurrences =
-      argc > 1 ? abs(atoi(argv[1])) : default_filter;
-  unsigned long size =
-      word_compressor_generate_dictionary_file(&current_node, stdin, &error);
+short print_format(WordCompressionNode **node, void *arguments, short *error) {
+  int bytes = fprintf(fp, "%s\t%s\t%ld\n", (*node)->value, (*node)->index,
+                      (*node)->occurrences);
 
-  word_compressor_create_index(&current_node, size);
-  word_compressor_dictionary_iterator(&current_node, word_compressor_filter,
-                                      &filter_ocurrences, &error);
-  word_compressor_dictionary_iterator(&current_node, print_format, NULL, &error);
-  word_compressor_dictionary_free(&current_node, 1, 1);
-
-  get_memory_table();
-
-  error = word_compressor_last_error_code();
-  if (error != WORD_COMPRESSOR_SUCCESS) {
-    fprintf(stderr, "%s\n", word_compressor_last_error());
-    fflush(stderr);
+  if (bytes < 0 || ferror(fp)) {
+    return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
   }
 
-  return error == WORD_COMPRESSOR_SUCCESS ? EXIT_SUCCESS : abs(error);
+  if (fflush(fp) != 0) {
+    return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
+  }
+
+  return WORD_COMPRESSION_SUCCESS;
+}
+
+
+
+short create_dictionary(const char *file, unsigned filter_ocurrences) {
+  WordCompressionNode *current_node = NULL;
+  short error = WORD_COMPRESSION_SUCCESS;
+  unsigned long size = 0;
+
+  file = file_extension(file);
+  size =
+      word_compression_generate_dictionary_file(&current_node, stdin, &error);
+  if (error != WORD_COMPRESSION_SUCCESS) {
+    fclose(fp);
+    word_compression_dictionary_free(&current_node, 1, 1);
+    return error;
+  }
+
+  error = word_compression_create_index(&current_node, size);
+  if (error != WORD_COMPRESSION_SUCCESS) {
+    word_compression_dictionary_free(&current_node, 1, 1);
+    return error;
+  }
+
+  word_compression_dictionary_iterator(&current_node, word_compression_filter,
+                                       &filter_ocurrences, &error);
+  if (error != WORD_COMPRESSION_SUCCESS) {
+    word_compression_dictionary_free(&current_node, 1, 1);
+    return error;
+  }
+
+  error = word_compressor_write_in(file, &fp);
+  if (error) {
+    word_compression_dictionary_free(&current_node, 1, 1);
+    return error;
+  }
+
+  word_compression_dictionary_iterator(&current_node, print_format, NULL,
+                                       &error);
+  fclose(fp);
+  word_compression_dictionary_free(&current_node, 1, 1);
+  return error;
+}
+
+
+
+short decompress(char *dictionary, char *target) {
+  short error = WORD_COMPRESSION_SUCCESS;
+
+  if (dictionary == NULL || target == NULL) {
+    return word_compression_error(WORD_COMPRESSION_ERROR_MISSING_ARGUMENTS,
+                                  "usage: %s decompress [dict%s] [target]",
+                                  WORD_COMPRESSION_APP_NAME,
+                                  WORD_COMPRESSION_EXTENSION);
+  }
+
+  error = word_compressor_write_in(NULL, &fp);
+  if (error != WORD_COMPRESSION_SUCCESS)
+    return error;
+
+  WordCompressionNode *dictionary_node = NULL;
+  word_compression_open(file_extension(dictionary), &dictionary_node, 0,
+                        &error);
+  if (error != WORD_COMPRESSION_SUCCESS) {
+    word_compression_dictionary_iterator(&dictionary_node, print_format, NULL,
+                                         &error);
+  }
+  word_compression_dictionary_free(&dictionary_node, 1, 1);
+
+  return error;
+}
+
+#define d(idx, dfl) ((argc > idx) ? argv[idx] : dfl)
+
+int main(int argc, char **argv) {
+  short error = word_compression_last_error_code();
+  char *argument = d(1, "dictionary");
+  char *data = NULL;
+
+  if (strcmp("dictionary", argument) == 0) {
+    error = create_dictionary(d(2, NULL), atoi(d(3, WORD_COMPRESSION_FILTER)));
+  } else if (strcmp("compress", argument) == 0) {
+    data = word_compressor_dict(d(2, NULL), d(3, NULL), &error);
+  } else if (strcmp("decompress", argument) == 0) {
+    error = decompress(d(2, NULL), d(3, NULL));
+  } else {
+    error = word_compression_error(WORD_COMPRESSION_ERROR_MISSING_ARGUMENTS,
+                                   "Usage: %s [dictionary|decompress|compress]",
+                                   d(0, WORD_COMPRESSION_APP_NAME));
+  }
+
+  if (error != WORD_COMPRESSION_SUCCESS) {
+    fprintf(stderr, "%s\n", word_compression_last_error());
+    fflush(stderr);
+  }
+  
+  if (data != NULL) {
+    fprintf(stdout, "%s", data);
+    word_compression_free_string(&data);
+    fflush(stdout);
+  }
+
+  return error == WORD_COMPRESSION_SUCCESS ? EXIT_SUCCESS : abs(error);
 }

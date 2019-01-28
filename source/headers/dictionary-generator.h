@@ -1,12 +1,14 @@
-#ifndef WORD_COMPRESSOR_DICTIONARY_GENERATOR_REGISTER
-#define WORD_COMPRESSOR_DICTIONARY_GENERATOR_REGISTER 1
+#ifndef WORD_COMPRESSION_DICTIONARY_GENERATOR_REGISTER
+#define WORD_COMPRESSION_DICTIONARY_GENERATOR_REGISTER 1
 
 #include "./types.h"
+#include <stdio.h>
 
-unsigned long word_compressor_generate_dictionary_file(DictionaryNode **,
-                                                       FILE *, short *);
+unsigned long word_compression_generate_dictionary_file(WordCompressionNode **,
+                                                        FILE *, short *);
 
-unsigned long word_compressor_generate_dictionary(DictionaryNode **, char *,
-                                                  unsigned long, short *);
+unsigned long word_compression_generate_dictionary(WordCompressionNode **,
+                                                   char *, unsigned long,
+                                                   short *);
 
 #endif

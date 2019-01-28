@@ -1,7 +1,7 @@
-#ifndef WORD_COMPRESSOR_PINCH_STRING_DEFINED
-#define WORD_COMPRESSOR_PINCH_STRING_DEFINED 1
+#ifndef WORD_COMPRESSION_PINCH_STRING_DEFINED
+#define WORD_COMPRESSION_PINCH_STRING_DEFINED 1
 
-char *word_compressor_pinch_string(char *, unsigned long, unsigned long);
-void word_compressor_pinch_string_free(char **);
+char *word_compression_pinch_string(char *, unsigned long, unsigned long);
+void word_compression_pinch_string_free(char **);
 
 #endif

@@ -1,8 +1,8 @@
-#ifndef WORD_COMPRESSOR_CREATE_INDEX_DEFINED
-#define WORD_COMPRESSOR_CREATE_INDEX_DEFINED 1
+#ifndef WORD_COMPRESSION_CREATE_INDEX_DEFINED
+#define WORD_COMPRESSION_CREATE_INDEX_DEFINED 1
 
 #include "./types.h"
 
-short int word_compressor_create_index(DictionaryNode **, unsigned long);
+short int word_compression_create_index(WordCompressionNode **, unsigned long);
 
 #endif

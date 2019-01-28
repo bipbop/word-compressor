@@ -1,9 +1,10 @@
-#ifndef WORD_COMPRESSOR_WORD_READER_REGISTER
-#define WORD_COMPRESSOR_WORD_READER_REGISTER 1
+#ifndef WORD_COMPRESSION_WORD_READER_REGISTER
+#define WORD_COMPRESSION_WORD_READER_REGISTER 1
 
 #include "./callbacks.h"
 
-unsigned long word_compressor_reader(char *, unsigned long, Callback, void *,
-                                     short *);
+unsigned long word_compression_reader(char *, unsigned long,
+                                      WordCompressionCallbackReader, void *,
+                                      short *);
 
 #endif

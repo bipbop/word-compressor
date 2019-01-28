@@ -17,18 +17,18 @@ void reverse_string(char *str) {
   }
 }
 
-#define word_compressor_has_input res_length != 0 && res != NULL
+#define word_compression_has_input res_length != 0 && res != NULL
 #define has_index                                                              \
   if (res_length < index)                                                      \
-  return WORD_COMPRESSOR_ERROR_SIZE
+  return WORD_COMPRESSION_ERROR_SIZE
 
-short word_compressor_position_index(char *res, unsigned long res_length,
-                                     unsigned long position) {
+short word_compression_position_index(char *res, unsigned long res_length,
+                                      unsigned long position) {
   short index = 0; // Initialize index of result
   unsigned long itemListLength = sizeof(item_list) - 1;
 
   do {
-    if (word_compressor_has_input) {
+    if (word_compression_has_input) {
       has_index;
       res[index] = item_list[(position % itemListLength)];
     }
@@ -36,7 +36,7 @@ short word_compressor_position_index(char *res, unsigned long res_length,
     index++;
   } while (position--);
 
-  if (word_compressor_has_input) {
+  if (word_compression_has_input) {
     has_index;
     res[index] = '\0';
     reverse_string(res);

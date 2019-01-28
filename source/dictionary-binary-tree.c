@@ -4,14 +4,13 @@
 #include "./headers/dictionary.h"
 #include "./headers/types.h"
 
-DictionaryNode *
-word_compressor_dictionary_binary_tree_insert(char *key, DictionaryNode **leaf,
-                                              DictionaryNode *parent,
-                                              unsigned short *new) {
-  DictionaryNode *node = *leaf;
+WordCompressionNode *word_compression_dictionary_binary_tree_insert(
+    char *key, WordCompressionNode **leaf, WordCompressionNode *parent,
+    unsigned short *new) {
+  WordCompressionNode *node = *leaf;
   int res = 0;
   if (node == NULL) {
-    *leaf = word_compressor_dictionary(key, parent, 1);
+    *leaf = word_compression_dictionary(key, NULL, parent, 1);
     if (*leaf == NULL)
       return NULL;
     *new = 1;
@@ -20,11 +19,11 @@ word_compressor_dictionary_binary_tree_insert(char *key, DictionaryNode **leaf,
 
   res = strcmp(key, node->index);
   if (res < 0) {
-    return word_compressor_dictionary_binary_tree_insert(key, &node->left, node,
-                                                         new);
+    return word_compression_dictionary_binary_tree_insert(key, &node->left,
+                                                          node, new);
   } else if (res > 0) {
-    return word_compressor_dictionary_binary_tree_insert(key, &node->right,
-                                                         node, new);
+    return word_compression_dictionary_binary_tree_insert(key, &node->right,
+                                                          node, new);
   }
 
   *new = 0;
@@ -32,28 +31,31 @@ word_compressor_dictionary_binary_tree_insert(char *key, DictionaryNode **leaf,
   return node;
 }
 
-DictionaryNode *
-word_compressor_dictionary_binary_tree_search(char *key,
-                                              DictionaryNode *node_leaf) {
+WordCompressionNode *word_compression_dictionary_binary_tree_search(
+    char *key, WordCompressionNode *node_leaf, short value_search) {
   int res = 0;
 
   if (node_leaf == NULL)
     return NULL;
 
-  res = strcmp(key, node_leaf->index);
+  res = value_search ? strcmp(key, node_leaf->value)
+                     : strcmp(key, node_leaf->index);
   if (res < 0) {
-    return word_compressor_dictionary_binary_tree_search(key, node_leaf->left);
+    return word_compression_dictionary_binary_tree_search(key, node_leaf->left,
+                                                          value_search);
   } else if (res > 0) {
-    return word_compressor_dictionary_binary_tree_search(key, node_leaf->right);
+    return word_compression_dictionary_binary_tree_search(key, node_leaf->right,
+                                                          value_search);
   }
 
   return node_leaf;
 }
 
-DictionaryNode *word_compressor_dictionary_binary_tree_push(
-    DictionaryNode *node, DictionaryNode **leaf, DictionaryNode *parent) {
+WordCompressionNode *word_compression_dictionary_binary_tree_push(
+    WordCompressionNode *node, WordCompressionNode **leaf,
+    WordCompressionNode *parent, short value_search) {
   int res = 0;
-  DictionaryNode *node_leaf = *leaf;
+  WordCompressionNode *node_leaf = *leaf;
 
   if (node_leaf == NULL) {
     node->parent = parent;
@@ -61,26 +63,27 @@ DictionaryNode *word_compressor_dictionary_binary_tree_push(
     return node;
   }
 
-  res = strcmp(node->index, node_leaf->index);
+  res = value_search ? strcmp(node->value, node_leaf->value)
+                     : strcmp(node->index, node_leaf->index);
   if (res < 0) {
-    return word_compressor_dictionary_binary_tree_push(node, &node_leaf->left,
-                                                       node_leaf);
+    return word_compression_dictionary_binary_tree_push(
+        node, &node_leaf->left, node_leaf, value_search);
   } else if (res > 0) {
-    return word_compressor_dictionary_binary_tree_push(node, &node_leaf->right,
-                                                       node_leaf);
+    return word_compression_dictionary_binary_tree_push(
+        node, &node_leaf->right, node_leaf, value_search);
   }
 
   return node_leaf;
 }
 
-void word_compressor_dictionary_binary_tree_delete(
-    DictionaryNode **leaf, unsigned short delete_words) {
+void word_compression_dictionary_binary_tree_delete(
+    WordCompressionNode **leaf, unsigned short delete_words) {
   int res = 0;
 
-  DictionaryNode *node = *leaf;
-  DictionaryNode *left = node->left;
-  DictionaryNode *right = node->right;
-  DictionaryNode *parent = node->parent;
+  WordCompressionNode *node = *leaf;
+  WordCompressionNode *left = node->left;
+  WordCompressionNode *right = node->right;
+  WordCompressionNode *parent = node->parent;
 
   *leaf = NULL;
 
@@ -88,7 +91,7 @@ void word_compressor_dictionary_binary_tree_delete(
     if (right != NULL && left != NULL) {
       *leaf = left;
       left->parent = NULL;
-      word_compressor_dictionary_binary_tree_push(right, leaf, left);
+      word_compression_dictionary_binary_tree_push(right, leaf, left, 1);
     } else if (right) {
       right->parent = NULL;
       *leaf = right;
@@ -108,16 +111,16 @@ void word_compressor_dictionary_binary_tree_delete(
     }
 
     if (left != NULL)
-      word_compressor_dictionary_binary_tree_push(left, leaf, parent);
+      word_compression_dictionary_binary_tree_push(left, leaf, parent, 1);
     if (right != NULL)
-      word_compressor_dictionary_binary_tree_push(right, leaf, parent);
+      word_compression_dictionary_binary_tree_push(right, leaf, parent, 1);
   }
 
-  word_compressor_dictionary_free(&node, 1, 0);
+  word_compression_dictionary_free(&node, 1, 0);
 }
 
-DictionaryNode *
-word_compressor_dictionary_binary_tree_base(DictionaryNode *node) {
+WordCompressionNode *
+word_compression_dictionary_binary_tree_base(WordCompressionNode *node) {
   if (node == NULL)
     return NULL;
   while (node->parent != NULL) {
@@ -126,11 +129,12 @@ word_compressor_dictionary_binary_tree_base(DictionaryNode *node) {
   return node;
 }
 
-void word_compressor_dictionary_binary_tree_free(DictionaryNode **node,
-                                                 unsigned short delete_words) {
+void word_compression_dictionary_binary_tree_free(WordCompressionNode **node,
+                                                  unsigned short delete_words) {
   if ((*node) == NULL)
     return;
-  DictionaryNode *father = word_compressor_dictionary_binary_tree_base(*node);
-  word_compressor_dictionary_free(&father, delete_words, 1);
+  WordCompressionNode *father =
+      word_compression_dictionary_binary_tree_base(*node);
+  word_compression_dictionary_free(&father, delete_words, 1);
   *node = NULL;
 }

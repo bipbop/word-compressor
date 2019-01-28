@@ -4,10 +4,10 @@
 #include "./headers/dictionary.h"
 #include "./headers/types.h"
 
-short word_compressor_filter(DictionaryNode **node, void *min_occurrences,
-                             short *error) {
-  if ((*node)->occurrences < *(unsigned int *)min_occurrences) {
-    word_compressor_dictionary_binary_tree_delete(node, 1);
+short word_compression_filter(WordCompressionNode **node, void *min_occurrences,
+                              short *error) {
+  if ((*node)->occurrences < *(unsigned *)min_occurrences) {
+    word_compression_dictionary_binary_tree_delete(node, 1);
   }
-  return WORD_COMPRESSOR_SUCCESS;
+  return WORD_COMPRESSION_SUCCESS;
 }
