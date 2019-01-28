@@ -1,5 +1,5 @@
-#ifndef word_compressor_types_defined
-#define word_compressor_types_defined 1
+#ifndef WORD_COMPRESSOR_TYPES_DEFINED
+#define WORD_COMPRESSOR_TYPES_DEFINED 1
 
 #include <stddef.h>
 

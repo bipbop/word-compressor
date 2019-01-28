@@ -1,5 +1,5 @@
-#ifndef word_compressor_memory_management_register
-#define word_compressor_memory_management_register 1
+#ifndef WORD_COMPRESSOR_MEMORY_MANAGEMENT_REGISTER
+#define WORD_COMPRESSOR_MEMORY_MANAGEMENT_REGISTER 1
 
 /* Use your malloc and free functions */
 

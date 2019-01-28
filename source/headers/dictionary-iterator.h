@@ -1,5 +1,5 @@
-#ifndef word_compressor_iterator_register
-#define word_compressor_iterator_register 1
+#ifndef WORD_COMPRESSOR_ITERATOR_REGISTER
+#define WORD_COMPRESSOR_ITERATOR_REGISTER 1
 
 #include "./callbacks.h"
 #include "./types.h"

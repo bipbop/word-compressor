@@ -1,5 +1,5 @@
-#ifndef word_compressor_word_reader_register
-#define word_compressor_word_reader_register 1
+#ifndef WORD_COMPRESSOR_WORD_READER_REGISTER
+#define WORD_COMPRESSOR_WORD_READER_REGISTER 1
 
 #include "./callbacks.h"
 

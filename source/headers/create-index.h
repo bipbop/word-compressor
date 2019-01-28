@@ -1,5 +1,5 @@
-#ifndef word_compressor_create_index_defined
-#define word_compressor_create_index_defined 1
+#ifndef WORD_COMPRESSOR_CREATE_INDEX_DEFINED
+#define WORD_COMPRESSOR_CREATE_INDEX_DEFINED 1
 
 #include "./types.h"
 

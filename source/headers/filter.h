@@ -1,5 +1,5 @@
-#ifndef word_compressor_filter_defined
-#define word_compressor_filter_defined 1
+#ifndef WORD_COMPRESSOR_FILTER_DEFINED
+#define WORD_COMPRESSOR_FILTER_DEFINED 1
 
 #include "./types.h"
 

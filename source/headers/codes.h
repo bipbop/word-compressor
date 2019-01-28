@@ -1,5 +1,5 @@
-#ifndef word_compressor_codes_defined
-#define word_compressor_codes_defined 1
+#ifndef WORD_COMPRESSOR_CODES_DEFINED
+#define WORD_COMPRESSOR_CODES_DEFINED 1
 
 #define WORD_COMPRESSOR_ERROR_LOGICAL -6
 #define WORD_COMPRESSOR_ERROR_CORRUPTION -5

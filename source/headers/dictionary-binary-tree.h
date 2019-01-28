@@ -1,5 +1,5 @@
-#ifndef word_compressor_dictionary_binary_tree_defined
-#define word_compressor_dictionary_binary_tree_defined 1
+#ifndef WORD_COMPRESSOR_DICTIONARY_BINARY_TREE_DEFINED
+#define WORD_COMPRESSOR_DICTIONARY_BINARY_TREE_DEFINED 1
 
 #include "./types.h"
 

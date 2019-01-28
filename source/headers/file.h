@@ -1,5 +1,5 @@
-#ifndef word_compressor_file_defined
-#define word_compressor_file_defined 1
+#ifndef WORD_COMPRESSOR_FILE_DEFINED
+#define WORD_COMPRESSOR_FILE_DEFINED 1
 
 #include "./callbacks.h"
 
