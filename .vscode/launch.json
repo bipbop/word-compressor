@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Passe o mouse para ver as descrições dos atributos existentes.
+    // Para obter mais informações, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "gdb",
+            "request": "launch",
+            "target": "${cwd}/word-compression",
+            "arguments": "decompress curl.dct < test.dct.txt",
+            "cwd": "${workspaceRoot}"
+        }
+    ]
+}

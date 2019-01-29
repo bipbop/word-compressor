@@ -22,7 +22,6 @@
 #include "./types.h"
 #include "./word-compressor.h"
 #include "./word-reader.h"
-#include "./write-in.h"
 
 #define WORD_COMPRESSION_APP_NAME "word-compression"
 #define WORD_COMPRESSION_FILTER "3"

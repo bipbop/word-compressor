@@ -47,7 +47,7 @@ unsigned long word_compressor(char *text, unsigned long start,
   }
 
   word = word_compression_pinch_string(text, start, end);
-  result = word_compression_dictionary_binary_tree_search(
+  result = word_compression_tree_search(
       word, compression_argument->dictionary, 1);
 
   if (result != NULL) {
@@ -63,7 +63,7 @@ unsigned long word_compressor(char *text, unsigned long start,
     return 0;
   }
 
-  result = word_compression_dictionary_binary_tree_search(
+  result = word_compression_tree_search(
       word, compression_argument->local_dictionary, 1);
   if (result != NULL) {
     result->occurrences++;
@@ -107,7 +107,7 @@ unsigned long word_compressor(char *text, unsigned long start,
     return 0;
   }
 
-  word_compression_dictionary_binary_tree_push(
+  word_compression_tree_push(
       result, &compression_argument->local_dictionary,
       compression_argument->local_dictionary, 1);
 
@@ -165,9 +165,7 @@ void word_compression_free_arguments(
   bzero(compression_argument, sizeof(WordCompressionArguments));
 }
 
-char *word_compressor_file(char *dictionary, char *target, short *error) {
-  FILE *fp_target = NULL;
-
+char *word_compressor_file(char *dictionary, FILE *fp_target, short *error) {
   char *local_dictionary = NULL;
   char *string = NULL;
   unsigned long local_dictionary_size = 1;
@@ -182,15 +180,9 @@ char *word_compressor_file(char *dictionary, char *target, short *error) {
 
   compression_argument.size = 1;
 
-  if (dictionary == NULL || target == NULL) {
+  if (dictionary == NULL || fp_target == NULL) {
     *error =
         word_compression_error(WORD_COMPRESSION_ERROR_MISSING_ARGUMENTS, NULL);
-    return NULL;
-  }
-
-  fp_target = fopen(target, "r");
-  if (fp_target == NULL) {
-    *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
     return NULL;
   }
 
@@ -205,7 +197,6 @@ char *word_compressor_file(char *dictionary, char *target, short *error) {
       fp_target, word_compressor, (void **)&compression_argument_ptr, error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);
-    fclose(fp_target);
     return NULL;
   }
 
@@ -249,7 +240,7 @@ char *word_compressor_file(char *dictionary, char *target, short *error) {
     return NULL;
   }
 
-  string = word_compression_malloc(string_size + 1);
+  string = (char *)word_compression_malloc(string_size + 1);
   if (string == NULL) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_ALLOC, NULL);
     word_compression_free_string(&local_dictionary);

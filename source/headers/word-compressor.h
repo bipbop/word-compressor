@@ -5,6 +5,9 @@
 
 unsigned long word_compressor(char *, unsigned long, unsigned long, void **,
                               short, short *);
-char *word_compressor_file(char *, char *, short *);
+short word_compressor_append_string(char *, unsigned long, unsigned long,
+                                    WordCompressionArguments *);
+char *word_compressor_file(char *, FILE *, short *);
+void word_compression_free_arguments(WordCompressionArguments *);
 
 #endif

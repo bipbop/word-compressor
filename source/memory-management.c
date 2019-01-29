@@ -15,7 +15,8 @@ void get_memory_table() {
   for (int i = 0; i < MEMORY_TABLE_LENGTH; i++) {
     if (memory_table[i] == NULL)
       continue;
-    printf("%p\n", memory_table[i]);
+    fprintf(stderr, "%p\n", memory_table[i]);
+    fflush(stderr);
   }
 #endif
 #endif

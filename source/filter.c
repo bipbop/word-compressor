@@ -6,8 +6,8 @@
 
 short word_compression_filter(WordCompressionNode **node, void *min_occurrences,
                               short *error, short value_search) {
-  if ((*node)->occurrences < *(unsigned *)min_occurrences) {
-    word_compression_dictionary_binary_tree_delete(node, 1, value_search);
+  if ((*node)->occurrences < *(unsigned long *)min_occurrences) {
+    word_compression_tree_delete(node, 1, value_search);
   }
   return WORD_COMPRESSION_SUCCESS;
 }
