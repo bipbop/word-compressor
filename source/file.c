@@ -226,6 +226,7 @@ unsigned long word_compression_file(FILE *fp,
     *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
     word_compression_free((void **)&linebuffer, current_size);
     current_size = 1;
+    return words;
   }
 
   if (current_size) {
