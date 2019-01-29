@@ -18,7 +18,7 @@
 #endif
 
 #ifndef MEMORY_TABLE_LENGTH
-#define MEMORY_TABLE_LENGTH 3000
+#define MEMORY_TABLE_LENGTH 300000
 #endif
 
 void get_memory_table();

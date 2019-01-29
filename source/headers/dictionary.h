@@ -6,7 +6,7 @@
 WordCompressionNode *word_compression_dictionary(char *, char *,
                                                  WordCompressionNode *,
                                                  unsigned long);
-void word_compression_dictionary_free(WordCompressionNode **, unsigned short,
+void word_compression_free_dictionary(WordCompressionNode **, unsigned short,
                                       unsigned short);
 
 #endif

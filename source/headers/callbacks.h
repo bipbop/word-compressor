@@ -7,7 +7,7 @@
 typedef short (*WordCompressionCallback)(WordCompressionNode **, void *,
                                          short *);
 typedef unsigned long (*WordCompressionCallbackReader)(char *, unsigned long,
-                                              unsigned long, void **, short,
-                                              short *);
+                                                       unsigned long, void **,
+                                                       short, short *);
 
 #endif

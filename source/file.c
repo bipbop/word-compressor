@@ -9,6 +9,7 @@
 #include "./headers/memory-management.h"
 #include "./headers/types.h"
 #include "./headers/word-reader.h"
+#include "./headers/decoder.h"
 
 unsigned read_file(FILE *fp, WordCompressionNode **node, short indexValue,
                    short *error) {
@@ -62,7 +63,7 @@ unsigned read_file(FILE *fp, WordCompressionNode **node, short indexValue,
   }
 
   if (ferror(fp)) {
-    word_compression_dictionary_free(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1);
     *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
     return words;
   }
@@ -71,8 +72,9 @@ unsigned read_file(FILE *fp, WordCompressionNode **node, short indexValue,
   return words;
 }
 
-unsigned long word_compression_open(const char *path, WordCompressionNode **node,
-                               short indexValue, short *error) {
+unsigned long word_compression_open(const char *path,
+                                    WordCompressionNode **node,
+                                    short indexValue, short *error) {
   unsigned words;
 
   if (path == NULL) {
@@ -94,64 +96,59 @@ unsigned long word_compression_open(const char *path, WordCompressionNode **node
   return words;
 }
 
-unsigned long word_compression_file(FILE *fp, WordCompressionCallbackReader callback,
-                               void *callback_parameters, short *error) {
+unsigned long word_compression_file(FILE *fp,
+                                    WordCompressionCallbackReader callback,
+                                    void *callback_parameters, short *error) {
   unsigned long words = 0;
-  char *fullstring = NULL;
-  char buffer[1024] = {0};
-  unsigned long current_size = 0;
-  unsigned numbytes = 0;
-  unsigned bytes = 0;
 
-  while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-    if (!current_size) {
-      fullstring = word_compression_malloc(sizeof(buffer));
-      if (fullstring == NULL) {
-        return word_compression_error(WORD_COMPRESSION_ERROR_ALLOC,
-                                      "can't allocate %ld bytes",
-                                      sizeof(buffer));
-      }
-      current_size += sizeof(buffer);
-    } else if (word_compression_realloc((void **)&fullstring, &current_size,
-                                        sizeof(buffer)) == NULL) {
-      word_compression_free((void **)&fullstring, current_size);
-      return word_compression_error(WORD_COMPRESSION_ERROR_ALLOC,
-                                    "can't reallocate %ld bytes as using %ld",
-                                    current_size, sizeof(buffer));
-    }
+  char *linebuffer = NULL;
+  char buffer[WORD_COMPRESSOR_BUFFER_SIZE] = {0};
 
-    bytes = strlen(buffer);
-    if ((numbytes + bytes) > current_size) {
+  unsigned long current_size = 1;
+  unsigned long buffer_length = 0;
+  unsigned long bytes = 0;
+
+  while (!feof(fp)) {
+    bytes = fread((void *)buffer, sizeof(char), WORD_COMPRESSOR_BUFFER_SIZE - 1, fp);
+    if (bytes == 0) break;
+    
+    buffer_length = strlen(buffer);
+    if (word_compression_realloc((void **)&linebuffer, &current_size,
+                                 buffer_length) == NULL) {
+      word_compression_free((void **)&linebuffer, current_size);
+      current_size = 0;
       return word_compression_error(
-          WORD_COMPRESSION_ERROR_LOGICAL,
-          "number of bytes to write are greather than allocated memory");
+          WORD_COMPRESSION_ERROR_ALLOC,
+          "can't reallocate %ld buffer_length as using %ld", current_size,
+          sizeof(buffer));
     }
 
-    memcpy(fullstring + numbytes, buffer, bytes);
-    numbytes += bytes;
-
-    if (buffer[bytes - 1] == '\n') {
-      words += word_compression_reader(fullstring, numbytes, callback,
+    strcat(linebuffer, buffer);
+    if (!word_compression_utf8alnum(buffer + ((buffer_length - 1) * sizeof(char)))) {
+      words += word_compression_reader(linebuffer, current_size, callback,
                                        callback_parameters, error);
-      word_compression_free((void **)&fullstring, current_size);
+      word_compression_free((void **)&linebuffer, current_size);
+      current_size = 1;
+
       if (*error != WORD_COMPRESSION_SUCCESS) {
         return words;
       }
-      current_size = 0;
-      numbytes = 0;
     }
 
     bzero(buffer, sizeof(buffer));
   }
 
   if (ferror(fp)) {
-    word_compression_free((void **)&fullstring, current_size);
+    *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
+    word_compression_free((void **)&linebuffer, current_size);
+    current_size = 1;
   }
 
-  if (numbytes) {
-    words += word_compression_reader(fullstring, numbytes, callback,
+  if (current_size) {
+    words += word_compression_reader(linebuffer, current_size, callback,
                                      callback_parameters, error);
-    word_compression_free((void **)&fullstring, current_size);
+    word_compression_free((void **)&linebuffer, current_size);
+    current_size = 1;
   }
 
   return words;

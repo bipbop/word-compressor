@@ -4,8 +4,10 @@
 #include "./headers/types.h"
 
 #define RETONERROR                                                             \
-  if (res != WORD_COMPRESSION_SUCCESS)                                         \
-  return res
+  if (res != WORD_COMPRESSION_SUCCESS) {                                       \
+    *non_fatal_error = res;                                                    \
+    return res;                                                                \
+  }
 
 short word_compression_dictionary_iterator(
     WordCompressionNode **root, WordCompressionCallback callback_node,

@@ -3,6 +3,9 @@
 
 #include "./types.h"
 
+void word_compressor_free_array(DictionaryArray *);
+short word_compression_array(DictionaryArray *, WordCompressionNode **,
+                             unsigned long);
 short int word_compression_create_index(WordCompressionNode **, unsigned long);
 
 #endif

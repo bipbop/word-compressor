@@ -26,8 +26,8 @@ const char *file_extension(const char *path) {
 }
 
 short print_format(WordCompressionNode **node, void *arguments, short *error) {
-  int bytes = fprintf(fp, "%s\t%s\t%ld\n", (*node)->value, (*node)->index,
-                      (*node)->occurrences);
+  int bytes = fprintf(fp, WORD_COMPRESSION_FORMAT, (*node)->value,
+                      (*node)->index, (*node)->occurrences);
 
   if (bytes < 0 || ferror(fp)) {
     return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
@@ -40,51 +40,47 @@ short print_format(WordCompressionNode **node, void *arguments, short *error) {
   return WORD_COMPRESSION_SUCCESS;
 }
 
-
-
-short create_dictionary(const char *file, unsigned filter_ocurrences) {
+short word_compressor_create_dictionary(FILE *fp, const char *file,
+                                        unsigned filter_ocurrences) {
   WordCompressionNode *current_node = NULL;
   short error = WORD_COMPRESSION_SUCCESS;
   unsigned long size = 0;
 
   file = file_extension(file);
   size =
-      word_compression_generate_dictionary_file(&current_node, stdin, &error);
+      word_compression_generate_dictionary_file(&current_node, fp, &error);
   if (error != WORD_COMPRESSION_SUCCESS) {
-    fclose(fp);
-    word_compression_dictionary_free(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1);
     return error;
   }
 
   error = word_compression_create_index(&current_node, size);
   if (error != WORD_COMPRESSION_SUCCESS) {
-    word_compression_dictionary_free(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1);
     return error;
   }
 
-  word_compression_dictionary_iterator(&current_node, word_compression_filter,
-                                       &filter_ocurrences, &error);
+  word_compression_dictionary_iterator(
+      &current_node, word_compression_filter_index, &filter_ocurrences, &error);
   if (error != WORD_COMPRESSION_SUCCESS) {
-    word_compression_dictionary_free(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1);
     return error;
   }
 
   error = word_compressor_write_in(file, &fp);
   if (error) {
-    word_compression_dictionary_free(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1);
     return error;
   }
 
   word_compression_dictionary_iterator(&current_node, print_format, NULL,
                                        &error);
   fclose(fp);
-  word_compression_dictionary_free(&current_node, 1, 1);
+  word_compression_free_dictionary(&current_node, 1, 1);
   return error;
 }
 
-
-
-short decompress(char *dictionary, char *target) {
+char *decompress(char *dictionary, char *target) {
   short error = WORD_COMPRESSION_SUCCESS;
 
   if (dictionary == NULL || target == NULL) {
@@ -105,7 +101,8 @@ short decompress(char *dictionary, char *target) {
     word_compression_dictionary_iterator(&dictionary_node, print_format, NULL,
                                          &error);
   }
-  word_compression_dictionary_free(&dictionary_node, 1, 1);
+
+  word_compression_free_dictionary(&dictionary_node, 1, 1);
 
   return error;
 }
@@ -118,11 +115,11 @@ int main(int argc, char **argv) {
   char *data = NULL;
 
   if (strcmp("dictionary", argument) == 0) {
-    error = create_dictionary(d(2, NULL), atoi(d(3, WORD_COMPRESSION_FILTER)));
+    error = word_compressor_create_dictionary(stdin, d(2, NULL), atoi(d(3, WORD_COMPRESSION_FILTER)));
   } else if (strcmp("compress", argument) == 0) {
-    data = word_compressor_dict(d(2, NULL), d(3, NULL), &error);
+    data = word_compressor_file(d(2, NULL), d(3, NULL), &error);
   } else if (strcmp("decompress", argument) == 0) {
-    error = decompress(d(2, NULL), d(3, NULL));
+    data = decompress(d(2, NULL), d(3, NULL));
   } else {
     error = word_compression_error(WORD_COMPRESSION_ERROR_MISSING_ARGUMENTS,
                                    "Usage: %s [dictionary|decompress|compress]",
@@ -130,15 +127,22 @@ int main(int argc, char **argv) {
   }
 
   if (error != WORD_COMPRESSION_SUCCESS) {
-    fprintf(stderr, "%s\n", word_compression_last_error());
+    fprintf(stderr, "%d: %s\n", abs(error), word_compression_last_error());
     fflush(stderr);
   }
-  
+
   if (data != NULL) {
     fprintf(stdout, "%s", data);
     word_compression_free_string(&data);
     fflush(stdout);
   }
+
+#ifdef DEBUG
+#if DEBUG == 1
+  get_memory_table();
+  printf("memory used: %ld\n", word_compression_allocated());
+#endif
+#endif
 
   return error == WORD_COMPRESSION_SUCCESS ? EXIT_SUCCESS : abs(error);
 }

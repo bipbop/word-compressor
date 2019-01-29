@@ -13,9 +13,16 @@ typedef struct WordCompressionNodeStruct {
 } WordCompressionNode;
 
 typedef struct {
+  WordCompressionNode **list;
+  unsigned long size;
+  unsigned long position;
+  unsigned long length;
+} DictionaryArray;
+
+typedef struct {
   char *str;
-  unsigned long str_size;
-  unsigned long dictionary_size;
+  unsigned long size;
+  unsigned long dictionary_length;
   WordCompressionNode *dictionary;
   WordCompressionNode *local_dictionary;
 } WordCompressionArguments;

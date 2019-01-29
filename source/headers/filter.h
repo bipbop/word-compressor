@@ -3,6 +3,7 @@
 
 #include "./types.h"
 
-short word_compression_filter(WordCompressionNode **, void *, short *);
+short word_compression_filter_index(WordCompressionNode **, void *, short *);
+short word_compression_filter_value(WordCompressionNode **, void *, short *);
 
 #endif

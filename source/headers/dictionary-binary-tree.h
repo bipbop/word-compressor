@@ -5,8 +5,9 @@
 
 void word_compression_dictionary_binary_tree_free(WordCompressionNode **,
                                                   unsigned short);
+
 void word_compression_dictionary_binary_tree_delete(WordCompressionNode **,
-                                                    unsigned short);
+                                                    unsigned short, short);
 WordCompressionNode *
 word_compression_dictionary_binary_tree_base(WordCompressionNode *);
 WordCompressionNode *word_compression_dictionary_binary_tree_insert(

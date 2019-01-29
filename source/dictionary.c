@@ -21,7 +21,7 @@ WordCompressionNode *word_compression_dictionary(char *word, char *index,
   return dictionaryNode;
 }
 
-void word_compression_dictionary_free(WordCompressionNode **node,
+void word_compression_free_dictionary(WordCompressionNode **node,
                                       unsigned short int free_word,
                                       unsigned short int free_children) {
   if (*node == NULL)
@@ -39,8 +39,8 @@ void word_compression_dictionary_free(WordCompressionNode **node,
   }
 
   if (free_children && (*node)->left != NULL)
-    word_compression_dictionary_free(&(*node)->left, free_word, 1);
+    word_compression_free_dictionary(&(*node)->left, free_word, 1);
   if (free_children && (*node)->right != NULL)
-    word_compression_dictionary_free(&(*node)->right, free_word, 1);
+    word_compression_free_dictionary(&(*node)->right, free_word, 1);
   word_compression_free((void **)node, sizeof(WordCompressionNode));
 }

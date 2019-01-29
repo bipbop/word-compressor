@@ -35,7 +35,7 @@ time_t word_compression_last_error_time() { return last_error_at; }
 short word_compression_last_error_code() { return last_error; }
 
 char *word_compression_last_error() {
-  if (last_error_message == '\0') {
+  if (last_error_message[0] == '\0') {
     return default_error_message(last_error);
   }
   return last_error_message;

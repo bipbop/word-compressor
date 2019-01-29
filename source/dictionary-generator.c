@@ -13,7 +13,8 @@
 #include "./headers/word-reader.h"
 
 unsigned long dictionary(char *text, unsigned long start, unsigned long end,
-                void **callback_parameters, short alphanum, short *error) {
+                         void **callback_parameters, short alphanum,
+                         short *error) {
   WordCompressionNode **mainNode = (WordCompressionNode **)callback_parameters;
   unsigned short is_new = 0;
   char *word = NULL;
