@@ -25,7 +25,7 @@
 #include "./wrappers.h"
 
 #define WORD_COMPRESSION_APP_NAME "word-compression"
-#define WORD_COMPRESSION_FILTER "3"
+#define WORD_COMPRESSION_FILTER "2"
 #define WORD_COMPRESSION_EXTENSION ".dct"
 
 const char *word_compression_version();

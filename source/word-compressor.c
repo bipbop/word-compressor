@@ -79,6 +79,13 @@ unsigned long word_compressor(char *text, unsigned long start,
     return 0;
   }
 
+  if (!word_compression_tree_search(
+      word, compression_argument->local_dictionary, 0)) {
+      word_compression_free_string(&word);
+      *error = word_compressor_append_string(text, start, end, compression_argument);
+      return 0;
+  }
+
   index_size = word_compression_position_index(
       NULL, 0, ++compression_argument->dictionary_length);
   index = (char *)word_compression_malloc(index_size * sizeof(char));
@@ -160,6 +167,8 @@ void word_compression_free_arguments(
   word_compression_free_string(&compression_argument->str);
   word_compression_free_dictionary(&compression_argument->local_dictionary, 1,
                                    1);
+  word_compression_free_dictionary(&compression_argument->index_dictionary, 1,
+                                   1);
   word_compression_free_dictionary(&compression_argument->dictionary, 1, 1);
   bzero(compression_argument, sizeof(WordCompressionArguments));
 }
@@ -187,6 +196,13 @@ char *word_compressor_file(char *dictionary, WC_FILE *fp_target, short *error) {
 
   compression_argument.dictionary_length = word_compression_open(
       dictionary, &compression_argument.dictionary, 1, error);
+  if (*error != WORD_COMPRESSION_SUCCESS) {
+    word_compression_free_arguments(&compression_argument);
+    return NULL;
+  }
+
+  word_compression_open(dictionary, &compression_argument.index_dictionary, 0,
+                        error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);
     return NULL;
@@ -288,9 +304,8 @@ unsigned long word_decompressor(char *text, unsigned long start,
   }
 
   if (!node) {
-    *error = word_compression_error(
-        WORD_COMPRESSION_ERROR_CORRUPTION,
-        "dictionary is corrupted, can't find %s key", word);
+    *error =
+        word_compressor_append_string(text, start, end, compression_argument);
   } else {
     word_compression_realloc((void **)&compression_argument->str,
                              &compression_argument->size, strlen(node->value));

@@ -24,6 +24,7 @@ typedef struct {
   unsigned long size;
   unsigned long dictionary_length;
   WordCompressionNode *dictionary;
+  WordCompressionNode *index_dictionary;
   WordCompressionNode *local_dictionary;
 } WordCompressionArguments;
 
