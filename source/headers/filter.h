@@ -1,8 +1,8 @@
 #ifndef WORD_COMPRESSION_FILTER_DEFINED
 #define WORD_COMPRESSION_FILTER_DEFINED 1
 
-#include "./wrappers.h"
 #include "./types.h"
+#include "./wrappers.h"
 
 short word_compression_filter_index(WordCompressionNode **, void *, short *);
 short word_compression_filter_value(WordCompressionNode **, void *, short *);

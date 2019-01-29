@@ -30,8 +30,8 @@ unsigned long dictionary(char *text, unsigned long start, unsigned long end,
                                "not enought memory to allocate string value");
     return 0;
   }
-  if (word_compression_tree_insert(word, mainNode, *mainNode,
-                                                     &is_new) == NULL) {
+  if (word_compression_tree_insert(word, mainNode, *mainNode, &is_new) ==
+      NULL) {
     *error = word_compression_error(
         WORD_COMPRESSION_ERROR_ALLOC,
         "not enought memory to allocate a new dictionary node");

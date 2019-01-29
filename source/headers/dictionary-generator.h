@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-#include "./wrappers.h"
 #include "./types.h"
+#include "./wrappers.h"
 
 unsigned long word_compression_generate_dictionary_file(WordCompressionNode **,
                                                         WC_FILE *, short *);

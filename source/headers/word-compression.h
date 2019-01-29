@@ -5,7 +5,6 @@
 #define WORD_COMPRESSION_MINOR_VER 0
 #define WORD_COMPRESSION_SUBMINOR_VER 0
 
-#include "./wrappers.h"
 #include "./callbacks.h"
 #include "./codes.h"
 #include "./create-index.h"
@@ -23,6 +22,7 @@
 #include "./types.h"
 #include "./word-compressor.h"
 #include "./word-reader.h"
+#include "./wrappers.h"
 
 #define WORD_COMPRESSION_APP_NAME "word-compression"
 #define WORD_COMPRESSION_FILTER "3"

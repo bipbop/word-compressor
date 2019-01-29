@@ -1,8 +1,8 @@
 #ifndef WORD_COMPRESSION_TREE_DEFINED
 #define WORD_COMPRESSION_TREE_DEFINED 1
 
-#include "./wrappers.h"
 #include "./types.h"
+#include "./wrappers.h"
 
 void word_compression_tree_free(WordCompressionNode **, unsigned short);
 

@@ -2,7 +2,6 @@
 #define WC_FILE FILE
 #endif
 
-
 #ifndef WC_FOPEN
 #define WC_FOPEN fopen
 #endif

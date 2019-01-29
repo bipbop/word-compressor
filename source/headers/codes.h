@@ -14,8 +14,8 @@
 #define WORD_COMPRESSION_ERROR_ALLOC WORD_COMPRESSION_ERROR_SPACE(1)
 #define WORD_COMPRESSION_SUCCESS 0
 
-#include <time.h>
 #include "./wrappers.h"
+#include <time.h>
 
 char *word_compression_last_error();
 short word_compression_error(short, char *, ...);

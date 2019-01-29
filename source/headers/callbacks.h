@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-#include "./wrappers.h"
 #include "./types.h"
+#include "./wrappers.h"
 
 typedef short (*WordCompressionCallback)(WordCompressionNode **, void *,
                                          short *);

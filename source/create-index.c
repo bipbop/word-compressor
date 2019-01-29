@@ -143,8 +143,7 @@ short word_compression_create_index(WordCompressionNode **current_node,
           index_size, dictionary_array.position);
     }
 
-    word_compression_tree_push(position, &new_list, new_list,
-                                                 0);
+    word_compression_tree_push(position, &new_list, new_list, 0);
   }
 
   *current_node = new_list;

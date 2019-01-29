@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "./headers/callbacks.h"
 #include "./headers/codes.h"
@@ -59,12 +59,13 @@ unsigned long parse_buffer(char *buffer, short *error,
     return 0;
   }
 
-  word_compression_tree_push(next_node, current_node,
-                                               *current_node, index_value);
+  word_compression_tree_push(next_node, current_node, *current_node,
+                             index_value);
   return 1;
 }
 
-unsigned long word_compression_parse_dict(WC_FILE *fp, WordCompressionNode **node,
+unsigned long word_compression_parse_dict(WC_FILE *fp,
+                                          WordCompressionNode **node,
                                           short index_value, short *error) {
   char buffer[WORD_COMPRESSOR_BUFFER_SIZE] = {0};
   char *ptr_buffer = NULL;
@@ -198,7 +199,8 @@ unsigned long word_compression_file(WC_FILE *fp,
   unsigned long bytes = 0;
 
   while (!WC_FEOF(fp)) {
-    WC_FREAD((void *)buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1), fp);
+    WC_FREAD((void *)buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1),
+             fp);
     bytes = strlen(buffer);
     if (bytes == 0)
       break;
@@ -215,7 +217,8 @@ unsigned long word_compression_file(WC_FILE *fp,
     }
 
     strcat(linebuffer, buffer);
-    if (word_compression_utf8alnum(buffer + ((buffer_length - 1) * sizeof(char))) == 0) {
+    if (word_compression_utf8alnum(buffer +
+                                   ((buffer_length - 1) * sizeof(char))) == 0) {
       words += word_compression_reader(linebuffer, current_size, callback,
                                        callback_parameters, error);
       word_compression_free((void **)&linebuffer, current_size);
