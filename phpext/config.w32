@@ -1,7 +1,0 @@
-ARG_ENABLE('wcompression', 'wcompression support', 'no');
-
-if (PHP_WCOMPRESSION != 'no') {
-	AC_DEFINE('HAVE_WCOMPRESSION', 1, 'wcompression support enabled');
-
-	EXTENSION('wcompression', 'wcompression.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
-}
