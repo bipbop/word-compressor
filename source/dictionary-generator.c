@@ -46,7 +46,7 @@ unsigned long dictionary(char *text, unsigned long start, unsigned long end,
 
 unsigned long
 word_compression_generate_dictionary_file(WordCompressionNode **current_node,
-                                          FILE *fp, short *error) {
+                                          WC_FILE *fp, short *error) {
   return word_compression_file(fp, dictionary, (void **)current_node, error);
 }
 

@@ -1,6 +1,7 @@
 #ifndef WORD_COMPRESSION_CREATE_INDEX_DEFINED
 #define WORD_COMPRESSION_CREATE_INDEX_DEFINED 1
 
+#include "./wrappers.h"
 #include "./types.h"
 
 void word_compressor_free_array(DictionaryArray *);

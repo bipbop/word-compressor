@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "./headers/callbacks.h"
 #include "./headers/codes.h"
@@ -27,21 +28,28 @@ unsigned long parse_buffer(char *buffer, short *error,
   temp = strtok(buffer, token);
   name = word_compression_malloc((strlen(temp) + 1) * sizeof(char));
   if (name == NULL) {
-    *error = word_compression_error(WORD_COMPRESSION_ERROR_ALLOC, NULL);
+    *error = word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, NULL);
     return words;
   }
 
   strcpy(name, temp);
 
   temp = strtok(NULL, token);
+
   index = word_compression_malloc((strlen(temp) + 1) * sizeof(char));
   if (name == NULL) {
     word_compression_free_string(&name);
-    *error = word_compression_error(WORD_COMPRESSION_ERROR_ALLOC, NULL);
+    *error = word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, NULL);
     return 0;
   }
   strcpy(index, temp);
   ocurrences = strtok(NULL, token);
+
+  if (ocurrences == NULL) {
+    *error = word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, NULL);
+    return 0;
+  }
+
   next_node = word_compression_dictionary(name, index, NULL, atol(ocurrences));
 
   if (next_node == NULL) {
@@ -56,7 +64,7 @@ unsigned long parse_buffer(char *buffer, short *error,
   return 1;
 }
 
-unsigned long word_compression_parse_dict(FILE *fp, WordCompressionNode **node,
+unsigned long word_compression_parse_dict(WC_FILE *fp, WordCompressionNode **node,
                                           short index_value, short *error) {
   char buffer[WORD_COMPRESSOR_BUFFER_SIZE] = {0};
   char *ptr_buffer = NULL;
@@ -69,11 +77,11 @@ unsigned long word_compression_parse_dict(FILE *fp, WordCompressionNode **node,
 
   WordCompressionNode *current_node = NULL;
 
-  while (!feof(fp) && block < 2 /* \n1\n2\n */) {
+  while (!WC_FEOF(fp) && block < 2 /* \n1\n2\n */) {
     bzero(buffer, sizeof(buffer));
     ptr_buffer = buffer;
-    readed_bytes =
-        fread(buffer, sizeof(char), WORD_COMPRESSOR_BUFFER_SIZE - 1, fp);
+    WC_FREAD(buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1), fp);
+    readed_bytes = strlen(buffer);
     if (!readed_bytes)
       break;
 
@@ -123,7 +131,7 @@ unsigned long word_compression_parse_dict(FILE *fp, WordCompressionNode **node,
 
   if (line_buffer != NULL) {
     if (block >= 2 /* \n1\n2\n */) {
-      if (fseek(fp, (line_buffer_bytes * -1) + 1, SEEK_CUR) != 0) {
+      if (WC_FSEEK(fp, (line_buffer_bytes * -1) + 1, SEEK_CUR) != 0) {
         *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
         word_compression_free_dictionary(&current_node, 1, 1);
         word_compression_free_string(&line_buffer);
@@ -165,19 +173,19 @@ unsigned long word_compression_open(const char *path,
     return 0;
   }
 
-  FILE *fp = fopen(path, "r");
+  WC_FILE *fp = WC_FOPEN(path, "r");
   if (fp == NULL) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
     return 0;
   }
 
   words = word_compression_parse_dict(fp, node, index_value, error);
-  fclose(fp);
+  WC_FCLOSE(fp);
 
   return words;
 }
 
-unsigned long word_compression_file(FILE *fp,
+unsigned long word_compression_file(WC_FILE *fp,
                                     WordCompressionCallbackReader callback,
                                     void *callback_parameters, short *error) {
   unsigned long words = 0;
@@ -189,9 +197,9 @@ unsigned long word_compression_file(FILE *fp,
   unsigned long buffer_length = 0;
   unsigned long bytes = 0;
 
-  while (!feof(fp)) {
-    bytes = fread((void *)buffer, sizeof(char), WORD_COMPRESSOR_BUFFER_SIZE - 1,
-                  fp);
+  while (!WC_FEOF(fp)) {
+    WC_FREAD((void *)buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1), fp);
+    bytes = strlen(buffer);
     if (bytes == 0)
       break;
 
@@ -207,8 +215,7 @@ unsigned long word_compression_file(FILE *fp,
     }
 
     strcat(linebuffer, buffer);
-    if (!word_compression_utf8alnum(buffer +
-                                    ((buffer_length - 1) * sizeof(char)))) {
+    if (word_compression_utf8alnum(buffer + ((buffer_length - 1) * sizeof(char))) == 0) {
       words += word_compression_reader(linebuffer, current_size, callback,
                                        callback_parameters, error);
       word_compression_free((void **)&linebuffer, current_size);

@@ -1,7 +1,7 @@
 #ifndef WORD_COMPRESSION_TYPES_DEFINED
 #define WORD_COMPRESSION_TYPES_DEFINED 1
 
-#include <stddef.h>
+#include "./wrappers.h"
 
 typedef struct WordCompressionNodeStruct {
   char *index;

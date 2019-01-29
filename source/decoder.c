@@ -31,8 +31,7 @@ short word_compression_utf8alnum(char *str) {
       output = NULL;
     }
     last_decoder_error = len;
-    return word_compression_error(WORD_COMPRESSION_ERROR_ENCODE,
-                                  "we got an invalid UTF-8 string");
+    return WORD_COMPRESSION_ERROR_ENCODE;
   }
 
   if (output != NULL) {

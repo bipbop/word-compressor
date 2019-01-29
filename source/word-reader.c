@@ -22,7 +22,7 @@ void iterate_text_reader(WordReaderInstance *this, short *error, short force) {
   unsigned end_size;
 
   if (alphanum < 0) {
-    *error = alphanum;
+    *error = word_compression_error(alphanum, "got an invalid UTF-8 data");
     return;
   }
 

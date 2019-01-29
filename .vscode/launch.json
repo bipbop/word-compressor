@@ -9,7 +9,7 @@
             "type": "gdb",
             "request": "launch",
             "target": "${cwd}/word-compression",
-            "arguments": "decompress curl.dct < test.dct.txt",
+            "arguments": "compress dict.dst < saida.xml",
             "cwd": "${workspaceRoot}"
         }
     ]

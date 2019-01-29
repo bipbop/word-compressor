@@ -165,7 +165,7 @@ void word_compression_free_arguments(
   bzero(compression_argument, sizeof(WordCompressionArguments));
 }
 
-char *word_compressor_file(char *dictionary, FILE *fp_target, short *error) {
+char *word_compressor_file(char *dictionary, WC_FILE *fp_target, short *error) {
   char *local_dictionary = NULL;
   char *string = NULL;
   unsigned long local_dictionary_size = 1;
@@ -295,7 +295,7 @@ unsigned long word_decompressor(char *text, unsigned long start,
   return 0;
 }
 
-char *word_decompressor_file(char *dictionary, FILE *input, short *error) {
+char *word_decompressor_file(char *dictionary, WC_FILE *input, short *error) {
   char *string = NULL;
   WordCompressionArguments compression_argument = {0};
   WordCompressionArguments *compression_argument_ptr = &compression_argument;
@@ -344,23 +344,38 @@ char *word_decompressor_file(char *dictionary, FILE *input, short *error) {
 }
 
 short print_format(WordCompressionNode **node, void *arguments, short *error) {
-  FILE *fp = (FILE *)arguments;
+  WC_FILE *fp = (WC_FILE *)arguments;
 
-  int bytes = fprintf(fp, WORD_COMPRESSION_FORMAT, (*node)->value,
+  int bytes = snprintf(NULL, 0, WORD_COMPRESSION_FORMAT, (*node)->value,
                       (*node)->index, (*node)->occurrences);
 
-  if (bytes < 0 || ferror(fp)) {
+  if (bytes < 0) {
     return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
   }
 
-  if (fflush(fp) != 0) {
+  char *string = (char*)word_compression_malloc(bytes + 1);
+  if (bytes != snprintf(string, bytes + 1, WORD_COMPRESSION_FORMAT, (*node)->value,
+                      (*node)->index, (*node)->occurrences)) {
+    word_compression_free_string(&string);
+    return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
+  }
+
+  if (!WC_FWRITE(string, bytes * sizeof(char), fp)) {
+    word_compression_free_string(&string);
+    return word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, 
+      "can't write in the output file");
+  }
+  
+  word_compression_free_string(&string);
+
+  if (WC_FFLUSH(fp) != 0) {
     return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
   }
 
   return WORD_COMPRESSION_SUCCESS;
 }
 
-short word_compressor_create_dictionary(FILE *input, FILE *output,
+short word_compressor_create_dictionary(WC_FILE *input, WC_FILE *output,
                                         unsigned long filter_ocurrences) {
   WordCompressionNode *current_node = NULL;
   short error = WORD_COMPRESSION_SUCCESS;

@@ -33,7 +33,7 @@ void *word_compression_realloc(void **ptr, unsigned long *old_size,
     return *ptr;
   }
 
-  data = app_realloc(*ptr, (*old_size) + new_bytes);
+  data = WC_REALLOC(*ptr, (*old_size) + new_bytes);
 
   if (data != NULL) {
 
@@ -59,7 +59,7 @@ void *word_compression_realloc(void **ptr, unsigned long *old_size,
 }
 
 void *word_compression_malloc(unsigned long size) {
-  void *data = app_malloc(size);
+  void *data = WC_MALLOC(size);
   bzero(data, size);
   used_bytes += size;
 #ifdef DEBUG
@@ -95,7 +95,7 @@ void word_compression_free(void **ptr, unsigned long size) {
 #endif
 #endif
 
-  app_free(*ptr);
+  WC_FREE(*ptr);
   *ptr = NULL;
   used_bytes -= size;
 }
