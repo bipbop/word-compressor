@@ -1,7 +1,6 @@
 #ifndef LIBWORDCOMPRESSION_DEFINED
 #define LIBWORDCOMPRESSION_DEFINED 1
 
-#include <stdio.h>
 #include "wrappers.h"
 
 short word_compressor_create_dictionary(WC_FILE *, WC_FILE *, unsigned long);

@@ -1,4 +1,4 @@
-PROJ_NAME = libwordcompression.so
+PROJ_NAME = libwordcompression.so.1
 EXECUTABLE = wordcompressor
 SRC = $(filter-out ./src/main.c,$(wildcard ./src/*.c))
 H_DIR =./include
@@ -19,7 +19,7 @@ install: $(PROJ_NAME)
 	chmod 777 /usr/local/lib/$(PROJ_NAME)
 	cp $(EXECUTABLE) /usr/local/bin
 	chmod 777 /usr/local/bin/$(EXECUTABLE)
-	cp $(HEADER) /usr/local/include/
+	gcc -I./include/ -E include/libwordcompression.h > /usr/local/include/libwordcompression.h
 
 clean:
-	rm -rf ./src/*.o $(PROJ_NAME)
+	rm -rf ./src/*.o $(PROJ_NAME) $(EXECUTABLE)
