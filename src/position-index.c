@@ -24,7 +24,7 @@ void reverse_string(char *str) {
 
 short word_compression_position_index(char *res, unsigned long res_length,
                                       unsigned long position) {
-  short index = 0; // Initialize index of result
+  short index = 0;
   unsigned long itemListLength = sizeof(item_list) - 1;
 
   do {

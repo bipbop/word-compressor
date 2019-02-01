@@ -1,5 +1,7 @@
-#include "word-compression.h"
+#include <stdio.h>
 #include <string.h>
+
+#include "word-compression.h"
 
 char lib_version[10] = {0};
 

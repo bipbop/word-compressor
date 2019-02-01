@@ -1,6 +1,18 @@
-SRC=$(wildcard src/*.c)
+PROJ_NAME = wordcompression.so
+C_SOURCE = $(wildcard ./src/*.c)
+H_SOURCE = $(wildcard ./include/*.h)
+H_DIR =./include
+OBJ = $(C_SOURCE:.c=.o)
+CC = gcc
+CFLAGS = -c -W -Wall -ansi -pedantic -I$(H_DIR) -I/usr/lib  -I/usr/local/lib -lutf8proc
 
-all:
-	gcc -o word-compression.so $(SRC) -lutf8proc -Wall -I include -O2 -shared -fPIC
+all: $(PROJ_NAME)
+ 
+$(PROJ_NAME): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+ 
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -shared -o $@ $<
+ 
 clean:
-	rm -rf word-compression
+	rm -rf *.o $(PROJ_NAME) *~

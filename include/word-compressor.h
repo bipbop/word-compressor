@@ -1,8 +1,8 @@
 #ifndef WORD_COMPRESSION_DEFINED
 #define WORD_COMPRESSION_DEFINED 1
 
-#include "wrappers.h"
 #include "types.h"
+#include "wrappers.h"
 
 #define WORD_COMPRESSION_FORMAT "%s\t%s\t%ld\n"
 

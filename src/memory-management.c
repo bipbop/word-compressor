@@ -65,7 +65,6 @@ void *word_compression_malloc(unsigned long size) {
 #ifdef DEBUG
 #if DEBUG == 1
   unsigned long i = memory_table_index++ % MEMORY_TABLE_LENGTH;
-  // printf("Pos: %ld\n", i);
   memory_table[i] = data;
   memory_table_size[i] = size;
 #endif
