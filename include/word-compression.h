@@ -23,6 +23,7 @@
 #include "word-compressor.h"
 #include "word-reader.h"
 #include "wrappers.h"
+#include "libwordcompression.h"
 
 #define WORD_COMPRESSION_APP_NAME "word-compression"
 #define WORD_COMPRESSION_FILTER "2"

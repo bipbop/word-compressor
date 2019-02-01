@@ -6,6 +6,7 @@
         "word-compressor.h": "c",
         "wrappers.h": "c",
         "filter.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "word-compression.h": "c"
     }
 }
