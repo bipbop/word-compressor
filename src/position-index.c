@@ -1,4 +1,5 @@
 #include <string.h>
+#include <time.h>
 
 #include "codes.h"
 #include "position-index.h"

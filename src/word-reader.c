@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <time.h>
+
 #include "word-reader.h"
 #include "callbacks.h"
 #include "codes.h"

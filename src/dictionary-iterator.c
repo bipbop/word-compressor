@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stddef.h>
+#include <time.h>
+
 #include "dictionary-iterator.h"
 #include "callbacks.h"
 #include "codes.h"

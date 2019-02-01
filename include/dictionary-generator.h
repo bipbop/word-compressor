@@ -1,8 +1,6 @@
 #ifndef WORD_COMPRESSION_DICTIONARY_GENERATOR_REGISTER
 #define WORD_COMPRESSION_DICTIONARY_GENERATOR_REGISTER 1
 
-#include <stdio.h>
-
 #include "types.h"
 #include "wrappers.h"
 

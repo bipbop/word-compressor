@@ -1,10 +1,6 @@
 #ifndef WORD_COMPRESSION_LIB_DEFINED
 #define WORD_COMPRESSION_LIB_DEFINED 1
 
-#define WORD_COMPRESSION_MAJOR_VER 1
-#define WORD_COMPRESSION_MINOR_VER 0
-#define WORD_COMPRESSION_SUBMINOR_VER 0
-
 #include "callbacks.h"
 #include "codes.h"
 #include "create-index.h"
@@ -28,7 +24,5 @@
 #define WORD_COMPRESSION_APP_NAME "word-compression"
 #define WORD_COMPRESSION_FILTER "2"
 #define WORD_COMPRESSION_EXTENSION ".dct"
-
-const char *word_compression_version();
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef WORD_COMPRESSION_CODES_DEFINED
-#define WORD_COMPRESSION_CODES_DEFINED 1
+#ifndef WORD_COMPRESSION_ERRORS_DEFINED
+#define WORD_COMPRESSION_ERRORS_DEFINED 1
 
 #define WORD_COMPRESSION_ERROR_SPACE(code) ((200 + code) * -1)
 
@@ -14,9 +14,8 @@
 #define WORD_COMPRESSION_ERROR_ALLOC WORD_COMPRESSION_ERROR_SPACE(1)
 #define WORD_COMPRESSION_SUCCESS 0
 
-#include "wrappers.h"
-#include "liberrors.h"
-
-short word_compression_error(short, char *, ...);
+char *word_compression_last_error();
+time_t word_compression_last_error_time();
+short word_compression_last_error_code();
 
 #endif

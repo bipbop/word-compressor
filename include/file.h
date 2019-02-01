@@ -1,8 +1,6 @@
 #ifndef WORD_COMPRESSION_FILE_DEFINED
 #define WORD_COMPRESSION_FILE_DEFINED 1
 
-#include <stdio.h>
-
 #include "callbacks.h"
 #include "wrappers.h"
 

@@ -1,8 +1,6 @@
 #ifndef WORD_COMPRESSION_CALLBACKS_DEFINED
 #define WORD_COMPRESSION_CALLBACKS_DEFINED 1
 
-#include <stddef.h>
-
 #include "types.h"
 #include "wrappers.h"
 
