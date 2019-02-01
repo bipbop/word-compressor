@@ -26,25 +26,23 @@ unsigned long parse_buffer(char *buffer, short *error,
 
   /* get the first token */
   temp = strtok(buffer, token);
-  name = word_compression_malloc((strlen(temp) + 1) * sizeof(char));
-  if (name == NULL) {
+  if (temp == NULL) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, NULL);
     return words;
   }
-
+  name = word_compression_malloc((strlen(temp) + 1) * sizeof(char));
   strcpy(name, temp);
 
   temp = strtok(NULL, token);
-
-  index = word_compression_malloc((strlen(temp) + 1) * sizeof(char));
-  if (name == NULL) {
+  if (temp == NULL) {
     word_compression_free_string(&name);
     *error = word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, NULL);
     return 0;
   }
+  index = word_compression_malloc((strlen(temp) + 1) * sizeof(char));
   strcpy(index, temp);
-  ocurrences = strtok(NULL, token);
 
+  ocurrences = strtok(NULL, token);
   if (ocurrences == NULL) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_CORRUPTION, NULL);
     return 0;
