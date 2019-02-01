@@ -1,3 +1,11 @@
 {
-    "C_Cpp.intelliSenseEngineFallback": "Disabled"
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "files.associations": {
+        "memory-management.h": "c",
+        "libwordcompression.h": "c",
+        "word-compressor.h": "c",
+        "wrappers.h": "c",
+        "filter.h": "c",
+        "stdio.h": "c"
+    }
 }

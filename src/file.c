@@ -74,6 +74,8 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
   unsigned long readed_bytes = 0;
   unsigned long line_buffer_bytes = 1;
   unsigned long i = 0;
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+  unsigned long pieces = 0;
   short block = 0;
 
   WordCompressionNode *current_node = NULL;
@@ -81,7 +83,7 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
   while (!WC_FEOF(fp) && block < 2 /* \n1\n2\n */) {
     bzero(buffer, sizeof(buffer));
     ptr_buffer = buffer;
-    WC_FREAD(buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1), fp);
+    pieces = WC_FREAD(buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1), fp);
     readed_bytes = strlen(buffer);
     if (!readed_bytes)
       break;
@@ -197,10 +199,11 @@ unsigned long word_compression_file(WC_FILE *fp,
   unsigned long current_size = 1;
   unsigned long buffer_length = 0;
   unsigned long bytes = 0;
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+  unsigned long pieces = 0;
 
   while (!WC_FEOF(fp)) {
-    WC_FREAD((void *)buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1),
-             fp);
+    pieces = WC_FREAD((void *)buffer, sizeof(char) * (WORD_COMPRESSOR_BUFFER_SIZE - 1), fp);
     bytes = strlen(buffer);
     if (bytes == 0)
       break;

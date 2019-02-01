@@ -5,12 +5,14 @@
 #include "wrappers.h"
 
 #define WORD_COMPRESSION_FORMAT "%s\t%s\t%ld\n"
-
-char *word_compressor_file(char *, WC_FILE *, short *);
-char *word_decompressor_file(char *, WC_FILE *, short *);
+short print_format(WordCompressionNode **, void *, short *);
+short word_compressor_dict_line(DictionaryArray *, char **,
+                                unsigned long *);
 void word_compression_free_arguments(WordCompressionArguments *);
-short word_compressor_create_dictionary(WC_FILE *, WC_FILE *, unsigned long);
 short word_compressor_append_string(char *, unsigned long, unsigned long,
                                     WordCompressionArguments *);
-
+unsigned long word_compressor(char *, unsigned long, unsigned long, void **,
+                              short, short *);
+unsigned long word_decompressor(char *, unsigned long, unsigned long, void **,
+                                short, short *);
 #endif
