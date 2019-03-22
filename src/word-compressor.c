@@ -81,7 +81,7 @@ unsigned long word_compressor(char *text, unsigned long start,
   }
 
   if (!word_compression_tree_search(
-          word, compression_argument->local_dictionary, 0)) {
+          word, compression_argument->index_dictionary, 0)) {
     word_compression_free_string(&word);
     *error =
         word_compressor_append_string(text, start, end, compression_argument);

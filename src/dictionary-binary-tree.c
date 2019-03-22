@@ -41,6 +41,7 @@ word_compression_tree_search(char *key, WordCompressionNode *node_leaf,
 
   res = value_search ? strcmp(key, node_leaf->value)
                      : strcmp(key, node_leaf->index);
+
   if (res < 0) {
     return word_compression_tree_search(key, node_leaf->left, value_search);
   } else if (res > 0) {
