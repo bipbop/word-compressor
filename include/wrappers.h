@@ -1,7 +1,9 @@
 #ifndef WORD_COMPRESSION_WRAPPERS_DEFINED
 #define WORD_COMPRESSION_WRAPPERS_DEFINED 1
 
+#ifndef ISHEADER
 #include <stdio.h>
+#endif
 
 #ifndef WC_FILE
 #define WC_FILE FILE

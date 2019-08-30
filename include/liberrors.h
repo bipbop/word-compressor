@@ -14,10 +14,7 @@
 #define WORD_COMPRESSION_ERROR_ALLOC WORD_COMPRESSION_ERROR_SPACE(1)
 #define WORD_COMPRESSION_SUCCESS 0
 
-#include <time.h>
-
 char *word_compression_last_error();
-time_t word_compression_last_error_time();
 short word_compression_last_error_code();
 
 #endif

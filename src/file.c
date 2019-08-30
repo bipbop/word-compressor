@@ -111,7 +111,7 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
       ptr_buffer = buffer + ((i + 1) * sizeof(char));
       if ((*error) != WORD_COMPRESSION_SUCCESS) {
         word_compression_free_string(&line_buffer);
-        word_compression_free_dictionary(&current_node, 1, 1);
+        word_compression_free_dictionary(&current_node, 1, 1, 0);
         return 0;
       }
     }
@@ -126,7 +126,7 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
   }
 
   if ((*error) != WORD_COMPRESSION_SUCCESS) {
-    word_compression_free_dictionary(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1, 0);
     return 0;
   }
 
@@ -134,7 +134,7 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
     if (block >= 2 /* \n1\n2\n */) {
       if (WC_FSEEK(fp, (line_buffer_bytes * -1) + 1, SEEK_CUR) != 0) {
         *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
-        word_compression_free_dictionary(&current_node, 1, 1);
+        word_compression_free_dictionary(&current_node, 1, 1, 0);
         word_compression_free_string(&line_buffer);
         line_buffer_bytes = 1;
         return 0;
@@ -148,13 +148,13 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
   line_buffer_bytes = 1;
 
   if (ferror(fp)) {
-    word_compression_free_dictionary(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1, 0);
     *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
     return 0;
   }
 
   if ((*error) != WORD_COMPRESSION_SUCCESS) {
-    word_compression_free_dictionary(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1, 0);
     return 0;
   }
 

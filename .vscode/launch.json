@@ -8,8 +8,7 @@
             "name": "Debug",
             "type": "gdb",
             "request": "launch",
-            "target": "${cwd}/word-compression",
-            "arguments": "compress dict.dst < saida.xml",
+            "target": "${cwd}/wordcompressor",
             "cwd": "${workspaceRoot}"
         }
     ]

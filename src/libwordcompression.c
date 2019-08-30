@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include "wrappers.h"
 #include "filter.h"
@@ -24,26 +23,26 @@ short word_compressor_create_dictionary(WC_FILE *input, WC_FILE *output,
   size =
       word_compression_generate_dictionary_file(&current_node, input, &error);
   if (error != WORD_COMPRESSION_SUCCESS) {
-    word_compression_free_dictionary(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1, 0);
     return error;
   }
 
   error = word_compression_create_index(&current_node, size);
   if (error != WORD_COMPRESSION_SUCCESS) {
-    word_compression_free_dictionary(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1, 0);
     return error;
   }
 
   word_compression_dictionary_iterator(
       &current_node, word_compression_filter_index, &filter_ocurrences, &error);
   if (error != WORD_COMPRESSION_SUCCESS) {
-    word_compression_free_dictionary(&current_node, 1, 1);
+    word_compression_free_dictionary(&current_node, 1, 1, 0);
     return error;
   }
 
   word_compression_dictionary_iterator(&current_node, print_format, output,
                                        &error);
-  word_compression_free_dictionary(&current_node, 1, 1);
+  word_compression_free_dictionary(&current_node, 1, 1, 0);
   return error;
 }
 
@@ -69,14 +68,14 @@ char *word_compressor_file(char *dictionary, WC_FILE *fp_target, short *error) {
     return NULL;
   }
 
-  compression_argument.dictionary_length = word_compression_create_cache(
+  compression_argument.dictionary_length = word_compression_cache(
       dictionary, &compression_argument.dictionary, 1, error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);
     return NULL;
   }
 
-  word_compression_create_cache(dictionary, &compression_argument.index_dictionary, 0,
+  word_compression_cache(dictionary, &compression_argument.index_dictionary, 0,
                         error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);
@@ -174,7 +173,7 @@ char *word_decompressor_file(char *dictionary, WC_FILE *input, short *error) {
     return NULL;
   }
 
-  words += word_compression_open(dictionary, &compression_argument.dictionary,
+  words += word_compression_cache(dictionary, &compression_argument.dictionary,
                                  0, error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);

@@ -1,5 +1,3 @@
-#include <time.h>
-
 #include "filter.h"
 #include "codes.h"
 #include "dictionary-binary-tree.h"

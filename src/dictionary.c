@@ -3,6 +3,7 @@
 #include "dictionary.h"
 #include "memory-management.h"
 #include "types.h"
+#include "cache.h"
 
 WordCompressionNode *word_compression_dictionary(char *word, char *index,
                                                  WordCompressionNode *parent,
@@ -23,8 +24,11 @@ WordCompressionNode *word_compression_dictionary(char *word, char *index,
 
 void word_compression_free_dictionary(WordCompressionNode **node,
                                       unsigned short int free_word,
-                                      unsigned short int free_children) {
+                                      unsigned short int free_children,
+                                      unsigned short int force_cache) {
   if (*node == NULL)
+    return;
+  if (!force_cache && word_compression_node_cache(*node))
     return;
   if (free_word && (*node)->value != NULL) {
     if ((*node)->value == (*node)->index) {
@@ -39,8 +43,8 @@ void word_compression_free_dictionary(WordCompressionNode **node,
   }
 
   if (free_children && (*node)->left != NULL)
-    word_compression_free_dictionary(&(*node)->left, free_word, 1);
+    word_compression_free_dictionary(&(*node)->left, free_word, 1, 0);
   if (free_children && (*node)->right != NULL)
-    word_compression_free_dictionary(&(*node)->right, free_word, 1);
+    word_compression_free_dictionary(&(*node)->right, free_word, 1, 0);
   word_compression_free((void **)node, sizeof(WordCompressionNode));
 }

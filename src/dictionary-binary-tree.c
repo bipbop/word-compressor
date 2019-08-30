@@ -118,7 +118,7 @@ void word_compression_tree_delete(WordCompressionNode **leaf,
       word_compression_tree_push(right, leaf, parent, value_search);
   }
 
-  word_compression_free_dictionary(&node, 1, 0);
+  word_compression_free_dictionary(&node, 1, 0, 0);
 }
 
 WordCompressionNode *word_compression_tree_base(WordCompressionNode *node) {
@@ -136,6 +136,6 @@ void word_compression_tree_free(WordCompressionNode **node,
   if ((*node) == NULL)
     return;
   father = word_compression_tree_base(*node);
-  word_compression_free_dictionary(&father, delete_words, 1);
+  word_compression_free_dictionary(&father, delete_words, 1, 0);
   *node = NULL;
 }

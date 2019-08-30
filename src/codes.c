@@ -2,7 +2,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include "codes.h"
 #include "decoder.h"
@@ -16,7 +15,6 @@ char success[] = "\0";
 
 short last_error = WORD_COMPRESSION_SUCCESS;
 char last_error_message[256] = "\0";
-time_t last_error_at = 0;
 
 char *default_error_message(short code) {
   switch (code) {
@@ -29,8 +27,6 @@ char *default_error_message(short code) {
   }
   return message_default_error;
 }
-
-time_t word_compression_last_error_time() { return last_error_at; }
 
 short word_compression_last_error_code() { return last_error; }
 
@@ -49,7 +45,6 @@ short word_compression_error(short code, char *format, ...) {
 
   last_error = code;
   bzero(last_error_message, sizeof(last_error_message));
-  time(&last_error_at);
 
   if (format == NULL) {
     if (code == WORD_COMPRESSION_ERROR_STDIO) {

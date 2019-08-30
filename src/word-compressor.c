@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include "callbacks.h"
 #include "codes.h"
@@ -168,10 +167,10 @@ void word_compression_free_arguments(
     return;
   word_compression_free_string(&compression_argument->str);
   word_compression_free_dictionary(&compression_argument->local_dictionary, 1,
-                                   1);
+                                   1, 0);
   word_compression_free_dictionary(&compression_argument->index_dictionary, 1,
-                                   1);
-  word_compression_free_dictionary(&compression_argument->dictionary, 1, 1);
+                                   1, 0);
+  word_compression_free_dictionary(&compression_argument->dictionary, 1, 1, 0);
   bzero(compression_argument, sizeof(WordCompressionArguments));
 }
 

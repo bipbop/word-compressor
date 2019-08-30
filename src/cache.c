@@ -1,7 +1,6 @@
 #include <codes.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "file.h"
 
@@ -10,6 +9,7 @@
 
 #include "types.h"
 #include "cache.h"
+#include "dictionary.h"
 
 unsigned long cache_size = 0;
 unsigned long cache_items = 0;
@@ -27,6 +27,7 @@ unsigned long word_compression_create_cache(const char *path,
   
   cache->path = (char *)word_compression_malloc(path_length + 1);
   if (cache->path == NULL) {
+    *error = word_compression_error(WORD_COMPRESSION_ERROR_ALLOC, NULL);
     word_compression_free((void **)&cache, sizeof(DictCache));
     return 0;
   }
@@ -42,6 +43,8 @@ unsigned long word_compression_create_cache(const char *path,
     return 0;
   }
 
+  cache->node = *node;
+
   if (!word_compression_realloc((void **)&cache_list, &cache_size, sizeof(cache_list))) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_ALLOC, NULL);
     word_compression_free((void **)&cache->path, path_length + 1);
@@ -53,9 +56,20 @@ unsigned long word_compression_create_cache(const char *path,
   return cache->words;
 }
 
+unsigned short word_compression_node_cache(WordCompressionNode *node) {
+  int i = 0;
+  for (i = 0; i < cache_items; i++) {
+    if (cache_list[i]->node == node) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 void word_compression_cache_flush() {
   int i;
   for (i = 0; i < cache_items; i++) {
+    word_compression_free_dictionary(&cache_list[i]->node, 1, 1, 1);
     word_compression_free((void **)&cache_list[i]->path, strlen(cache_list[i]->path) + 1);
     word_compression_free((void **)&cache_list[i], sizeof(DictCache));
   }

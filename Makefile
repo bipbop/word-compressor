@@ -6,7 +6,7 @@ H_DIR =./include
 HEADER = ./include/libwordcompression.h
 CC = gcc
 LD_LIBRARY_PATH = $LD_LIBRARY_PATH
-CFLAGS = -Wall -I$(H_DIR) -std=c99 -lutf8proc -D_GNU_SOURCE -ansi -pedantic
+CFLAGS = -g -Wall -I$(H_DIR) -std=c99 -lutf8proc -D_GNU_SOURCE -ansi -pedantic
 all: $(PROJ_NAME) main
 
 main:
@@ -15,11 +15,11 @@ main:
 $(PROJ_NAME):
 	$(CC) $(SRC) -shared -fPIC -o $@ $(CFLAGS)
 
-install: $(PROJ_NAME)
+install: $(PROJ_NAME) main
 	cp $(PROJ_NAME) /usr/local/lib/$(PROJ_NAME).$(PROJ_VERSION)
 	ln -sf /usr/local/lib/$(PROJ_NAME).$(PROJ_VERSION) /usr/local/lib/$(PROJ_NAME)
 	cp $(EXECUTABLE) /usr/local/bin
-	gcc -I./include/ -E include/libwordcompression.h > /usr/local/include/libwordcompression.h
+	gcc -DISHEADER=1 -I./include/ -E include/libwordcompression.h > /usr/local/include/libwordcompression.h
 
 clean:
 	rm -rf ./src/*.o $(PROJ_NAME) $(EXECUTABLE)
