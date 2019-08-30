@@ -1,3 +1,4 @@
+libwordcompression.so
 **/*.so.*
 **/*.o
 wordcompressor
