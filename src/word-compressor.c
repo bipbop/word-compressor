@@ -214,7 +214,7 @@ unsigned long word_decompressor(char *text, unsigned long start,
 
 short print_format(WordCompressionNode **node, void *arguments, short *error) {
   WC_FILE *fp = (WC_FILE *)arguments;
-
+  char *string = NULL;
   int bytes = snprintf(NULL, 0, WORD_COMPRESSION_FORMAT, (*node)->value,
                        (*node)->index, (*node)->occurrences);
 
@@ -222,7 +222,7 @@ short print_format(WordCompressionNode **node, void *arguments, short *error) {
     return word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
   }
 
-  char *string = (char *)word_compression_malloc(bytes + 1);
+  string = (char *)word_compression_malloc(bytes + 1);
   if (bytes != snprintf(string, bytes + 1, WORD_COMPRESSION_FORMAT,
                         (*node)->value, (*node)->index, (*node)->occurrences)) {
     word_compression_free_string(&string);

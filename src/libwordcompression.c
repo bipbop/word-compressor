@@ -12,6 +12,7 @@
 #include "dictionary-generator.h"
 #include "dictionary-iterator.h"
 #include "dictionary.h"
+#include "cache.h"
 #include "libwordcompression.h"
 
 short word_compressor_create_dictionary(WC_FILE *input, WC_FILE *output,
@@ -68,14 +69,14 @@ char *word_compressor_file(char *dictionary, WC_FILE *fp_target, short *error) {
     return NULL;
   }
 
-  compression_argument.dictionary_length = word_compression_open(
+  compression_argument.dictionary_length = word_compression_create_cache(
       dictionary, &compression_argument.dictionary, 1, error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);
     return NULL;
   }
 
-  word_compression_open(dictionary, &compression_argument.index_dictionary, 0,
+  word_compression_create_cache(dictionary, &compression_argument.index_dictionary, 0,
                         error);
   if (*error != WORD_COMPRESSION_SUCCESS) {
     word_compression_free_arguments(&compression_argument);
@@ -159,6 +160,7 @@ char *word_decompressor_file(char *dictionary, WC_FILE *input, short *error) {
   char *string = NULL;
   WordCompressionArguments compression_argument = {0};
   WordCompressionArguments *compression_argument_ptr = &compression_argument;
+  unsigned long words = 0;
 
   if (dictionary == NULL) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_MISSING_ARGUMENTS,
@@ -172,7 +174,6 @@ char *word_decompressor_file(char *dictionary, WC_FILE *input, short *error) {
     return NULL;
   }
 
-  unsigned long words = 0;
   words += word_compression_open(dictionary, &compression_argument.dictionary,
                                  0, error);
   if (*error != WORD_COMPRESSION_SUCCESS) {

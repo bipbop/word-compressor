@@ -1,3 +1,8 @@
+#ifndef WORD_COMPRESSION_WRAPPERS_DEFINED
+#define WORD_COMPRESSION_WRAPPERS_DEFINED 1
+
+#include <stdio.h>
+
 #ifndef WC_FILE
 #define WC_FILE FILE
 #endif
@@ -8,8 +13,8 @@
 
 #ifndef WC_FCLOSE
 #define WC_FCLOSE fclose
-
 #endif
+
 #ifndef WC_FGETS
 #define WC_FGETS fgets
 #endif
@@ -72,4 +77,6 @@
 
 #ifndef MEMORY_TABLE_LENGTH
 #define MEMORY_TABLE_LENGTH 300000
+#endif
+
 #endif

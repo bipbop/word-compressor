@@ -1,8 +1,6 @@
 #ifndef WORD_COMPRESSION_TYPES_DEFINED
 #define WORD_COMPRESSION_TYPES_DEFINED 1
 
-#include "wrappers.h"
-
 typedef struct WordCompressionNodeStruct {
   char *index;
   char *value;
@@ -27,5 +25,12 @@ typedef struct {
   WordCompressionNode *index_dictionary;
   WordCompressionNode *local_dictionary;
 } WordCompressionArguments;
+
+typedef struct DictCacheStruct {
+  const char *path;
+  short index_value;
+  WordCompressionNode *node;
+  unsigned long words;
+} DictCache;
 
 #endif

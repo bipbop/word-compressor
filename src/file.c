@@ -162,10 +162,12 @@ unsigned long word_compression_parse_dict(WC_FILE *fp,
   return words;
 }
 
+
 unsigned long word_compression_open(const char *path,
                                     WordCompressionNode **node,
                                     short index_value, short *error) {
   unsigned long words = 0;
+  WC_FILE *fp = NULL;
 
   if (path == NULL) {
     *error = word_compression_error(
@@ -174,7 +176,7 @@ unsigned long word_compression_open(const char *path,
     return 0;
   }
 
-  WC_FILE *fp = WC_FOPEN(path, "r");
+  fp = WC_FOPEN(path, "r");
   if (fp == NULL) {
     *error = word_compression_error(WORD_COMPRESSION_ERROR_STDIO, NULL);
     return 0;

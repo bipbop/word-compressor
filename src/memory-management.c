@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "memory-management.h"
 
@@ -50,7 +51,7 @@ void *word_compression_realloc(void **ptr, unsigned long *old_size,
 #endif
 
     *ptr = data;
-    bzero(data + (*old_size), new_bytes);
+    bzero(((uint8_t *)data) + (*old_size), new_bytes);
     *old_size += new_bytes;
     used_bytes += new_bytes;
   }
@@ -100,8 +101,9 @@ void word_compression_free(void **ptr, unsigned long size) {
 }
 
 void word_compression_free_string(char **ptr) {
+  unsigned long size = 0;
   if (*ptr == NULL)
     return;
-  unsigned long size = strlen(*ptr) + 1;
+  size = strlen(*ptr) + 1;
   word_compression_free((void **)ptr, size);
 }

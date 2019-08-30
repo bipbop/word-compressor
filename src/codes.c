@@ -4,7 +4,6 @@
 #include <string.h>
 #include <time.h>
 
-
 #include "codes.h"
 #include "decoder.h"
 #include "memory-management.h"
@@ -43,6 +42,8 @@ char *word_compression_last_error() {
 }
 
 short word_compression_error(short code, char *format, ...) {
+  va_list args;
+
   if (code > 0)
     return code;
 
@@ -58,7 +59,6 @@ short word_compression_error(short code, char *format, ...) {
     return code;
   }
 
-  va_list args;
   va_start(args, format);
   vsnprintf(last_error_message, sizeof(last_error_message), format, args);
   va_end(args);

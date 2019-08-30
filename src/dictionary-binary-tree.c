@@ -132,9 +132,10 @@ WordCompressionNode *word_compression_tree_base(WordCompressionNode *node) {
 
 void word_compression_tree_free(WordCompressionNode **node,
                                 unsigned short delete_words) {
+  WordCompressionNode *father = NULL;
   if ((*node) == NULL)
     return;
-  WordCompressionNode *father = word_compression_tree_base(*node);
+  father = word_compression_tree_base(*node);
   word_compression_free_dictionary(&father, delete_words, 1);
   *node = NULL;
 }

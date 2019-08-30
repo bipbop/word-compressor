@@ -6,7 +6,7 @@ H_DIR =./include
 HEADER = ./include/libwordcompression.h
 CC = gcc
 LD_LIBRARY_PATH = $LD_LIBRARY_PATH
-CFLAGS = -Wall -I$(H_DIR) -std=c99 -lutf8proc -D_GNU_SOURCE
+CFLAGS = -Wall -I$(H_DIR) -std=c99 -lutf8proc -D_GNU_SOURCE -ansi -pedantic
 all: $(PROJ_NAME) main
 
 main:

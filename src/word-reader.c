@@ -50,18 +50,19 @@ void iterate_text_reader(WordReaderInstance *this, short *error, short force) {
 unsigned long word_compression_reader(char *text, unsigned long total_size,
                                       WordCompressionCallbackReader callback,
                                       void *callback_parameters, short *error) {
-  WordReaderInstance this = {.text = text,
-                             .total_size = total_size,
-                             .callback = callback,
-                             .callback_parameters = callback_parameters,
-                             .ptr_text = text,
-                             .begin_size = 0,
-                             .words = 0,
-                             .size = total_size,
-                             .alphanum = -1};
-
   unsigned long n = 0;
   int data = 0;
+  WordReaderInstance this;
+
+  this.text = text,
+  this.total_size = total_size;
+  this.callback = callback;
+  this.callback_parameters = callback_parameters;
+  this.ptr_text = text;
+  this.begin_size = 0;
+  this.words = 0;
+  this.size = total_size;
+  this.alphanum = -1;
 
   *error = WORD_COMPRESSION_SUCCESS;
 
